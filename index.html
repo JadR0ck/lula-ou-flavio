@@ -1,0 +1,1661 @@
+
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Lula ou Flavio — Quiz Eleitoral Pixel</title>
+<meta name="description" content="Descubra qual candidato à presidência pensa mais como você! Jogo educativo com propostas reais dos planos de governo." />
+<meta property="og:title" content="Lula ou Flavio — Quiz Eleitoral Pixel" />
+<meta property="og:description" content="Descubra qual candidato à presidência pensa mais como você! Jogo educativo com propostas reais dos planos de governo." />
+<meta name="twitter:card" content="summary_large_image" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+<style>
+/* ==========================================================================
+   LULA OU FLAVIO — 16-bit retro quiz
+   Sprites originais desenhados em SVG escalável (sem arte externa).
+   ========================================================================== */
+
+:root{
+  /* --- paleta base (spec §10) --- */
+  --bg:            #1a1a2e;
+  --bg-2:          #0f3460;
+  --bg-deep:       #0a1226;
+  --gold:          #ffd700;
+  --gold-dim:      #c8a400;
+  --lula:          #f87171;
+  --lula-dark:     #b33131;
+  --lula-deep:     #6e1f1f;
+  --flavio:        #4ade80;
+  --flavio-dark:   #1e8a4a;
+  --flavio-deep:   #14512c;
+  --blue:          #60a5fa;
+  --blue-dark:     #2b5fa8;
+  --purple:        #a78bfa;
+  --purple-dark:   #6b4fc4;
+  --danger:        #ef4444;
+  --ink:           #ffffff;
+  --muted-text:    #b9c2de;
+  --line:          #ffffff;
+
+  /* --- tipografia --- */
+  --f-pixel: 'Press Start 2P', 'Courier New', monospace;
+  --f-body:  'VT323', 'Courier New', monospace;
+
+  /* --- geometria --- */
+  --shell-w: 600px;
+  --pad: clamp(10px, 2.6vw, 18px);
+  --step: 3px;                 /* unidade de pixel que alinha tudo */
+  --ui: clamp(9px, 2.5vw, 11px);   /* corpo em Press Start */
+  --ui-sm: clamp(7px, 1.9vw, 8.5px);
+  --q-text: clamp(17px, 4.6vw, 26px);
+}
+
+*{ box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+
+html,body{ height:100%; }
+body{
+  margin:0;
+  background: var(--bg-deep);
+  color: var(--ink);
+  font-family: var(--f-body);
+  font-size:18px;
+  line-height:1.35;
+  overflow-x:hidden;
+}
+img,svg{ image-rendering: pixelated; image-rendering: crisp-edges; }
+button{ font-family:inherit; cursor:pointer; border:0; background:none; color:inherit; }
+:focus-visible{ outline:var(--step) solid var(--gold); outline-offset:2px; }
+
+/* ==========================================================================
+   Shell de console com viewport fixo
+   ========================================================================== */
+#stage{
+  position:fixed; inset:0;
+  display:flex; align-items:center; justify-content:center;
+  overflow:hidden;
+}
+/* bordas decorativas em pixel emoldurando a coluna de jogo em telas largas */
+#stage::before,
+#stage::after{
+  content:"";
+  position:absolute; top:0; bottom:0; width:calc((100vw - var(--shell-w)) / 2 - 12px);
+  /* painel lateral de arcade: grade de blocos + moldura dourada */
+  background:
+    linear-gradient(90deg, rgba(255,215,0,.55) 0 3px, transparent 3px),
+    linear-gradient(270deg, rgba(255,215,0,.55) 0 3px, transparent 3px),
+    repeating-linear-gradient(0deg, #101a33 0 24px, #0b1226 24px 48px),
+    repeating-linear-gradient(90deg, rgba(96,165,250,.42) 0 24px, rgba(15,52,96,.42) 24px 48px);
+  display:none;
+}
+#stage::before{ left:0; }
+#stage::after { right:0; }
+@media (min-width:900px){
+  #stage{ gap:12px; }
+  #stage::before, #stage::after{ display:block; z-index:0; }
+  #deck{ z-index:1; }
+}
+
+#deck{
+  width:min(100vw, var(--shell-w));
+  height:100%;
+  max-height:100dvh;
+  position:relative;
+  overflow:hidden;
+  background: var(--bg);
+  display:flex; flex-direction:column;
+}
+@media (min-width:900px){
+  #deck{
+    height:min(100dvh, 900px);
+    border:var(--step) solid var(--line);
+    box-shadow: 0 0 0 var(--step) var(--bg-deep), 10px 10px 0 rgba(0,0,0,.55);
+  }
+}
+
+/* ==========================================================================
+   Fundos pixelados
+   ========================================================================== */
+.bg{
+  position:absolute; inset:0; z-index:0; pointer-events:none;
+  background: var(--bg);
+}
+.bg-world{
+  background:
+    /* sol */
+    radial-gradient(circle at 76% 15%, var(--gold) 0 26px, transparent 27px),
+    /* nuvens */
+    radial-gradient(circle at 16% 12%, rgba(255,255,255,.22) 0 22px, transparent 23px),
+    radial-gradient(circle at 24% 15%, rgba(255,255,255,.22) 0 16px, transparent 17px),
+    /* morros */
+    radial-gradient(ellipse 240px 150px at 14% 96%, var(--flavio-dark) 0 60%, transparent 61%),
+    radial-gradient(ellipse 300px 170px at 88% 100%, var(--flavio-dark) 0 60%, transparent 61%),
+    /* ceu */
+    linear-gradient(180deg, #14315e 0%, #1d4f8c 45%, #245c9c 62%, #2f7a5c 76%, #23613f 100%);
+}
+.bg-world::after{
+  content:""; position:absolute; inset:0;
+  background-image:
+    repeating-linear-gradient(0deg, rgba(0,0,0,.16) 0 2px, transparent 2px 4px),
+    repeating-linear-gradient(90deg, rgba(0,0,0,.08) 0 2px, transparent 2px 4px);
+  opacity:.55;
+}
+.bg-quiz{
+  background:
+    linear-gradient(180deg, var(--bg-2) 0%, var(--bg) 55%, #16162c 100%);
+}
+.bg-quiz::after{
+  content:""; position:absolute; inset:0;
+  background-image:
+    repeating-linear-gradient(0deg, rgba(255,255,255,.035) 0 2px, transparent 2px 6px),
+    repeating-linear-gradient(90deg, rgba(255,255,255,.03) 0 2px, transparent 2px 6px);
+}
+.bg-palace{
+  background:
+    radial-gradient(circle at 50% 118%, rgba(255,215,0,.30) 0 46%, transparent 60%),
+    linear-gradient(180deg, #241a3d 0%, #3b2a63 38%, var(--bg-2) 78%, var(--bg) 100%);
+}
+.bg-dark{ background: linear-gradient(180deg, var(--bg-deep), #101a33); }
+
+/* estrelas pixeladas piscando na tela inicial */
+.stars{ position:absolute; inset:0; }
+.star{
+  position:absolute; width:var(--step); height:var(--step);
+  background:var(--ink); opacity:.85;
+  animation: twinkle 1.8s steps(2,end) infinite;
+}
+@keyframes twinkle{ 0%,100%{opacity:.85} 50%{opacity:.12} }
+
+/* ==========================================================================
+   Telas
+   ========================================================================== */
+#screens{ position:relative; z-index:1; flex:1; min-height:0; }
+.screen{
+  position:absolute; inset:0;
+  display:none;
+  flex-direction:column;
+  padding: var(--pad);
+  padding-bottom: max(var(--pad), env(safe-area-inset-bottom));
+  padding-top: max(var(--pad), env(safe-area-inset-top));
+  overflow-y:auto;
+  overscroll-behavior: contain;
+}
+.screen.on{ display:flex; }
+.screen.fade-in{ animation: fadeIn .26s ease-out both; }
+@keyframes fadeIn{ from{opacity:0} to{opacity:1} }
+
+/* ==========================================================================
+   Primitivas de pixel
+   ========================================================================== */
+.pix{
+  border: var(--step) solid var(--line);
+  box-shadow: inset 0 0 0 var(--step) rgba(0,0,0,.45);
+}
+/* borda dupla grossa usada nas caixas de diálogo */
+.dialog{
+  position:relative;
+  border: calc(var(--step)*2) solid var(--gold);
+  background: rgba(10,18,38,.92);
+  box-shadow:
+    inset 0 0 0 var(--step) var(--bg-2),
+    inset 0 0 0 calc(var(--step)*2) rgba(0,0,0,.5),
+    0 6px 0 rgba(0,0,0,.5);
+  padding: clamp(10px,3vw,16px);
+}
+.dialog.dark{ border-color: var(--ink); }
+
+.label{
+  font-family: var(--f-pixel);
+  font-size: var(--ui-sm);
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color: var(--muted-text);
+}
+
+/* marca do título */
+.wordmark{
+  font-family: var(--f-pixel);
+  font-size: clamp(20px,6.6vw,38px);
+  letter-spacing:.01em;
+  line-height:1.25;
+  margin:0;
+  text-align:center;
+  color: var(--gold);
+  text-shadow:
+     0 var(--step) 0 #7a5c00,
+     0 calc(var(--step)*2) 0 #3a2c00,
+     0 0 22px rgba(255,215,0,.45);
+  animation: glow 2.4s ease-in-out infinite;
+}
+@keyframes glow{
+  0%,100%{ text-shadow: 0 var(--step) 0 #7a5c00, 0 calc(var(--step)*2) 0 #3a2c00, 0 0 20px rgba(255,215,0,.35); }
+  50%    { text-shadow: 0 var(--step) 0 #7a5c00, 0 calc(var(--step)*2) 0 #3a2c00, 0 0 40px rgba(255,215,0,.80); }
+}
+.wordmark .vs-l{ color: var(--lula); }
+.wordmark .vs-f{ color: var(--flavio); }
+.wordmark .ou{
+  display:block;
+  font-size:.55em; color:var(--ink);
+  letter-spacing:.34em; margin:.18em 0;
+}
+
+/* ==========================================================================
+   Botões — estilo arcade
+   ========================================================================== */
+.btn{
+  display:flex; align-items:center; justify-content:center; gap:.7em;
+  min-height:44px;
+  padding:.85em 1em;
+  font-family: var(--f-pixel);
+  font-size: var(--ui);
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  text-align:center;
+  color:#fff;
+  background: var(--blue);
+  border: var(--step) solid var(--line);
+  box-shadow:
+    inset 0 calc(var(--step)*2) 0 rgba(255,255,255,.30),
+    inset 0 calc(var(--step)*-2) 0 rgba(0,0,0,.30),
+    0 var(--step) 0 var(--bg-deep);
+  transition: transform .06s steps(2,end), filter .12s;
+}
+.btn:hover:not(:disabled){ filter:brightness(1.12); }
+.btn:active:not(:disabled){ transform: translateY(var(--step)); box-shadow: inset 0 calc(var(--step)*2) 0 rgba(0,0,0,.32); }
+.btn:disabled{ filter:grayscale(.7) brightness(.6); cursor:not-allowed; }
+
+.btn--play{   background: var(--blue); }
+.btn--rank{   background: var(--purple); }
+.btn--plans{  background: #3d4463; }
+.btn--ok{     background: var(--flavio-dark); }
+.btn--go{     background: var(--blue); }
+.btn--share{  background: var(--purple); }
+.btn--ghost{  background: transparent; border-color: var(--line); }
+.btn--wide{ width:100%; }
+
+/* os dois botões gigantes do quiz */
+.answer{
+  flex:1 1 0;
+  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:.5em;
+  min-height:88px;
+  padding:1em .6em;
+  font-family: var(--f-pixel);
+  font-size: clamp(11px,3.4vw,16px);
+  letter-spacing:.08em;
+  color:#fff;
+  border: calc(var(--step)*2) solid var(--line);
+  box-shadow: inset 0 6px 0 rgba(255,255,255,.32), inset 0 -6px 0 rgba(0,0,0,.34), 0 6px 0 var(--bg-deep);
+  transition: transform .06s steps(2,end), filter .12s;
+  position:relative;
+}
+.answer .k{ font-size:.72em; opacity:.85; letter-spacing:.1em; }
+/* SIM = verde, NÃO = vermelho (convenção de controle). Os tons são
+   DESATURADOS e diferentes das cores dos candidatos (--flavio / --lula),
+   para não reler como "SIM = Flávio, NÃO = Lula". O reveal continua sendo
+   o único lugar que acende as cores de marca dos candidatos. */
+.answer.yes{ background: #2f6b45; }
+.answer.no { background: #7a3138; }
+.answer:hover:not(:disabled){ filter:brightness(1.16); }
+.answer:active:not(:disabled), .answer.press{ transform: translateY(5px); box-shadow: inset 0 6px 0 rgba(0,0,0,.36); }
+.answer:disabled{ opacity:.55; cursor:default; }
+
+/* ==========================================================================
+   Tela inicial
+   ========================================================================== */
+.title-scene{
+  position:absolute; inset:0; z-index:0;
+  width:100%; height:100%;
+  opacity:.9;
+  pointer-events:none;
+}
+#scr-title > :not(.title-scene){ position:relative; z-index:1; }
+
+.title-art{
+  flex:1; min-height:0;
+  display:flex; align-items:flex-end; justify-content:center;
+  gap: clamp(4px, 3vw, 24px);
+  padding-bottom: .5em;
+  position:relative;
+}
+.fighter{ display:flex; flex-direction:column; align-items:center; gap:.35em; }
+.fighter svg{ width: clamp(74px, 26vw, 132px); height:auto; display:block; }
+.fighter .tag{
+  font-family: var(--f-pixel); font-size: var(--ui-sm); letter-spacing:.08em;
+  padding:.4em .6em; border:var(--step) solid #fff;
+}
+.fighter.lula  .tag{ background: var(--lula-dark); }
+.fighter.flavio .tag{ background: var(--flavio-dark); }
+
+.vs{
+  font-family: var(--f-pixel);
+  font-size: clamp(18px,5.4vw,30px);
+  color: var(--gold);
+  text-shadow: 0 var(--step) 0 #6d5200, 0 calc(var(--step)*2) 0 #2e2200;
+  padding-bottom: clamp(30px, 9vw, 56px);
+  animation: bounce 1s steps(3,end) infinite;
+}
+@keyframes bounce{ 0%,100%{transform:translateY(0)} 50%{transform:translateY(-9px)} }
+
+/* respiração idle nos sprites */
+.idle{ animation: idle 1.1s steps(2,end) infinite; transform-origin:50% 100%; }
+@keyframes idle{ 0%,100%{ transform:translateY(0) } 50%{ transform:translateY(-5px) } }
+
+.title-menu{ display:flex; flex-direction:column; gap:.6em; padding-bottom:.4em; }
+.disclaimer{
+  font-size: clamp(14px,3.4vw,17px);
+  line-height:1.25;
+  color: var(--muted-text);
+  text-align:center;
+  padding: .7em .2em 0;
+}
+
+/* ==========================================================================
+   Tela de cadastro
+   ========================================================================== */
+.center-col{ flex:1; display:flex; flex-direction:column; justify-content:center; gap:.9em; min-height:0; }
+.rpg-title{
+  font-family: var(--f-pixel);
+  font-size: clamp(11px,3.4vw,15px);
+  letter-spacing:.06em; color: var(--gold); text-align:center; margin:0 0 .2em;
+}
+.field{
+  width:100%;
+  font-family: var(--f-pixel);
+  font-size: clamp(10px,3vw,13px);
+  letter-spacing:.06em;
+  color:#0b1020;
+  background:#fff;
+  border: var(--step) solid var(--gold);
+  box-shadow: inset 0 0 0 var(--step) #b9c2de;
+  padding:.85em .7em;
+  min-height:44px;
+  text-transform:uppercase;
+}
+.field::placeholder{ color:#8f97b3; }
+.check{
+  display:flex; align-items:flex-start; gap:.7em;
+  font-size: clamp(15px,3.6vw,18px);
+  line-height:1.25; color: var(--ink);
+  cursor:pointer;
+}
+.check input{
+  appearance:none; -webkit-appearance:none;
+  flex:0 0 auto;
+  width:26px; height:26px; margin:0;
+  background:#fff; border:var(--step) solid var(--gold);
+  display:grid; place-content:center;
+}
+.check input::after{ content:""; width:14px; height:14px; background:var(--flavio-dark); transform:scale(0); transition:transform .08s steps(2,end); }
+.check input:checked::after{ transform:scale(1); }
+.hint{ font-size: clamp(15px,3.4vw,17px); color: var(--muted-text); }
+.err{ font-family: var(--f-pixel); font-size: var(--ui-sm); letter-spacing:.05em; color: var(--danger); min-height:1.4em; }
+
+/* ==========================================================================
+   Tela do quiz
+   ========================================================================== */
+.hud{
+  display:flex; align-items:center; gap:.6em;
+  padding-bottom: .55em;
+  flex:0 0 auto;
+}
+.bar{
+  flex:1; height: clamp(16px,4.4vw,22px);
+  background: var(--bg-deep);
+  border: var(--step) solid var(--line);
+  padding:2px;
+  position:relative;
+  overflow:hidden;
+}
+.bar .fill{
+  height:100%;
+  background:
+    repeating-linear-gradient(90deg, var(--gold) 0 6px, var(--gold-dim) 6px 8px);
+  width:0%;
+  transition: width .32s steps(6,end);
+}
+.hud .count{
+  font-family: var(--f-pixel); font-size: var(--ui-sm); letter-spacing:.06em;
+  color: var(--gold); white-space:nowrap;
+}
+.icon-btn{
+  flex:0 0 auto;
+  width:44px; height:44px;
+  display:grid; place-content:center;
+  font-size:20px;
+  background: var(--bg-2); border:var(--step) solid var(--line);
+}
+
+.q-zone{ flex:0 0 auto; }
+/* a caixa da pergunta é o elemento dominante da tela — ocupa o espaço que
+   antes era dividido com os sprites. */
+.q-box{
+  min-height: clamp(200px, 42vh, 326px);
+  display:flex; flex-direction:column; justify-content:center; gap:.7em;
+}
+.q-cat{
+  font-family: var(--f-pixel); font-size: var(--ui-sm); letter-spacing:.08em;
+  color: var(--gold); text-align:center;
+}
+.q-text{
+  font-size: var(--q-text);
+  line-height:1.18;
+  text-align:center;
+  color:#fff;
+  margin:0;
+  text-wrap: balance;
+}
+.q-enter{ animation: slideIn .28s ease-out both; }
+@keyframes slideIn{ from{ opacity:0; transform:translateX(22px) } to{ opacity:1; transform:none } }
+
+/* Palco central. Durante a PERGUNTA fica vazio de propósito — os candidatos
+   só aparecem no reveal, quando o app diz de quem era a proposta. */
+.arena{
+  flex:1 1 auto;
+  min-height:0;
+  display:flex; align-items:center; justify-content:space-between;
+  gap: var(--pad);
+  padding: .3em 0;
+}
+.arena .fighter{
+  flex:1 1 0;
+  opacity:0; visibility:hidden;
+  transition: opacity .18s ease-out, visibility .18s;
+}
+.arena .fighter.show{
+  opacity:1; visibility:visible;
+  animation: pop .38s steps(4,end) both;
+}
+@keyframes pop{ 0%{ transform:scale(.55) translateY(10px) } 100%{ transform:none } }
+.arena .fighter svg{ width: clamp(84px, 30vw, 132px); height:auto; }
+.arena .fighter .face{ display:flex; flex-direction:column; align-items:center; gap:.3em; }
+.arena .fighter .name{
+  font-family: var(--f-pixel); font-size: var(--ui); letter-spacing:.07em;
+}
+.arena .fighter.lula .name{ color: var(--lula); }
+.arena .fighter.flavio .name{ color: var(--flavio); }
+/* a frase explicativa: o que a resposta do jogador significou */
+.rev-verb{
+  font-size: clamp(17px, 4.2vw, 22px);
+  line-height:1.2;
+  text-align:center;
+  color:#fff;
+  min-height:2.4em;
+  padding-inline: .3em;
+}
+.arena .fighter.lula .rev-verb b{ color: var(--lula); }
+.arena .fighter.flavio .rev-verb b{ color: var(--flavio); }
+
+.controls{
+  flex:0 0 auto;
+  display:flex; gap: clamp(6px,2.5vw,14px);
+}
+
+/* flash em tela cheia ao responder */
+.flash{ position:absolute; inset:0; z-index:9; pointer-events:none; opacity:0; }
+.flash.go-l{ background: var(--lula); animation: flash .34s steps(2,end); }
+.flash.go-f{ background: var(--flavio); animation: flash .34s steps(2,end); }
+@keyframes flash{ 0%{opacity:.55} 100%{opacity:0} }
+
+/* toast */
+.toast{
+  position:absolute; z-index:10; left:50%; bottom:14%;
+  transform:translateX(-50%);
+  font-family: var(--f-pixel); font-size: var(--ui-sm); letter-spacing:.05em;
+  background:#000; color:var(--gold);
+  border:var(--step) solid var(--gold);
+  padding:.8em 1em; text-align:center; max-width:90%;
+}
+
+/* ==========================================================================
+   Telas de overlay (checkpoint / resultado)
+   ========================================================================== */
+.sheet{ flex:1; display:flex; flex-direction:column; justify-content:center; gap:.8em; min-height:0; overflow-y:auto; overscroll-behavior:contain; padding-block:2px; }
+.sheet h2{
+  font-family: var(--f-pixel);
+  font-size: clamp(13px,4vw,19px);
+  letter-spacing:.05em; color: var(--gold); text-align:center; margin:0;
+  text-shadow: 0 var(--step) 0 #6d5200;
+}
+.sub{ text-align:center; font-size: clamp(16px,3.8vw,20px); color:var(--muted-text); margin:0; }
+
+/* barras duplas de pontuação */
+.scores{ display:flex; flex-direction:column; gap:.55em; }
+.score-row{ display:flex; align-items:center; gap:.6em; }
+.score-row .who{
+  font-family: var(--f-pixel); font-size: var(--ui-sm); letter-spacing:.06em;
+  width:4.4em; flex:0 0 auto;
+}
+.score-row.l .who{ color: var(--lula); }
+.score-row.f .who{ color: var(--flavio); }
+.score-row .track{
+  flex:1; height: clamp(20px,5.4vw,26px);
+  background: var(--bg-deep); border:var(--step) solid var(--line); padding:2px;
+}
+.score-row .track i{ display:block; height:100%; width:0; transition: width .9s steps(8,end); }
+.score-row.l .track i{ background: repeating-linear-gradient(90deg, var(--lula) 0 6px, var(--lula-dark) 6px 8px); }
+.score-row.f .track i{ background: repeating-linear-gradient(90deg, var(--flavio) 0 6px, var(--flavio-dark) 6px 8px); }
+.score-row .pct{
+  font-family: var(--f-pixel); font-size: var(--ui-sm);
+  width:3.4em; text-align:right; flex:0 0 auto;
+}
+
+/* lista de ranking */
+.rk-list{ display:flex; flex-direction:column; gap:6px; overflow-y:auto; max-height:34vh; padding-right:4px; }
+.rk-row{
+  display:grid; grid-template-columns: 2.2em 1fr auto; align-items:center; gap:.6em;
+  padding:.45em .6em;
+  flex:0 0 auto;
+  background: rgba(15,52,96,.7);
+  border: var(--step) solid rgba(255,255,255,.28);
+  font-size: clamp(16px,3.6vw,19px);
+}
+.rk-row .pos{ font-family: var(--f-pixel); font-size: var(--ui-sm); color: var(--muted-text); }
+.rk-row .nm{ overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.rk-row .vl{ font-family: var(--f-pixel); font-size: var(--ui-sm); }
+.rk-row.top1{ border-color: var(--gold); background: rgba(255,215,0,.14); }
+.rk-row.top1 .pos{ color: var(--gold); }
+.rk-row.top2, .rk-row.top3{ border-color: rgba(255,215,0,.5); }
+.rk-row.me{ outline: var(--step) solid var(--gold); outline-offset:-1px; background: rgba(255,215,0,.10); }
+.rk-row .vl.l{ color: var(--lula); }
+.rk-row .vl.f{ color: var(--flavio); }
+.rk-empty{ text-align:center; font-size:clamp(16px,3.6vw,19px); color:var(--muted-text); padding:.8em; }
+
+.tabs{ display:flex; gap:6px; }
+.tab{
+  flex:1;
+  font-family: var(--f-pixel); font-size: var(--ui-sm); letter-spacing:.06em;
+  padding:.75em .3em; min-height:44px;
+  background:#2a3050; border:var(--step) solid rgba(255,255,255,.35); color:var(--muted-text);
+}
+.tab.on{ background: var(--gold); color:#1a1a2e; border-color:#fff; }
+
+.stats-grid{
+  display:grid; grid-template-columns:1fr 1fr; gap:.5em;
+  font-size: clamp(16px,3.6vw,19px); text-align:center;
+}
+.stats-grid b{ display:block; font-family:var(--f-pixel); font-size: clamp(11px,3.2vw,14px); color:var(--gold); margin-bottom:.35em; }
+
+/* resultado */
+.champ{ display:flex; flex-direction:column; align-items:center; gap:.4em; }
+.champ svg{ width: clamp(120px, 42vw, 190px); height:auto; }
+.champ.enter svg{ animation: spawnIn .7s steps(7,end) both; }
+@keyframes spawnIn{
+  0%{ transform: translateY(-70%) scale(.5); opacity:0; }
+  100%{ transform:none; opacity:1; }
+}
+/* o brilho dourado só existe quando há UM vencedor — em empate ninguém é
+   coroado nem brilha. */
+.champ.win svg{ filter: drop-shadow(0 0 18px rgba(255,215,0,.65)); }
+.champ .crown{ font-size: 26px; }
+
+.verdict{
+  font-size: clamp(17px,4.2vw,22px);
+  text-align:center; line-height:1.2; margin:0;
+}
+.verdict b{ color: var(--gold); }
+
+.mini-stats{ display:flex; justify-content:center; gap:1.2em; flex-wrap:wrap; font-size: clamp(15px,3.5vw,18px); color:var(--muted-text); }
+.mini-stats b{ color:#fff; }
+
+.share-row{ display:flex; gap:.5em; }
+.share-row .btn{ flex:1; }
+.btn--wa{ background:#25D366; }
+.btn--tw{ background:#1DA1F2; }
+
+.actions{ display:flex; flex-direction:column; gap:.55em; }
+
+/* confete */
+.confetti{ position:absolute; inset:0; z-index:2; overflow:hidden; pointer-events:none; }
+.confetti i{
+  position:absolute; top:-14px; width:8px; height:8px; display:block;
+  animation: fall linear infinite;
+}
+@keyframes fall{ to{ transform: translateY(115%) rotate(220deg); } }
+
+/* scrollbar */
+.rk-list::-webkit-scrollbar{ width:10px; }
+.rk-list::-webkit-scrollbar-track{ background: var(--bg-deep); }
+.rk-list::-webkit-scrollbar-thumb{ background: var(--bg-2); border:2px solid var(--bg-deep); }
+
+/* movimento reduzido */
+@media (prefers-reduced-motion: reduce){
+  *{ animation-duration:.001ms !!important; animation-iteration-count:1 !important; transition-duration:.001ms !important; }
+  .confetti{ display:none; }
+}
+</style>
+</head>
+<body>
+
+<div id="stage">
+  <div id="deck">
+    <div class="bg bg-world" id="deckBg"></div>
+    <div class="stars" id="stars" aria-hidden="true"></div>
+
+    <div id="screens">
+
+      <!-- ============================================================
+           1 · TITLE
+           ============================================================ -->
+      <section class="screen on" id="scr-title" data-screen-label="01 Tela Inicial">
+        <!-- cena SMW em camadas: morros, canos, blocos '?' e moedas -->
+        <svg class="title-scene" viewBox="0 0 120 84" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+          <rect x="0" y="52" width="120" height="32" fill="#2f7a5c"/>
+          <rect x="0" y="52" width="120" height="3" fill="#3f9d75"/>
+          <path d="M0 46 Q16 26 32 46 Z" fill="#45a37a"/>
+          <path d="M26 50 Q48 22 70 50 Z" fill="#3d9169"/>
+          <path d="M66 48 Q88 28 110 48 Z" fill="#45a37a"/>
+          <rect x="94" y="0" width="26" height="12" fill="#245c9c"/>
+          <g fill="#2f7a5c">
+            <rect x="14" y="44" width="10" height="4"/>
+            <rect x="16" y="36" width="6" height="10"/>
+            <rect x="14" y="34" width="10" height="3"/>
+          </g>
+          <g>
+            <rect x="46" y="40" width="9" height="9" fill="#c8862a"/>
+            <rect x="46" y="40" width="9" height="2" fill="#ffd700"/>
+            <rect x="46" y="47" width="9" height="2" fill="#8a5a1c"/>
+            <text x="50.5" y="47.5" font-size="7" font-family="monospace" fill="#fff" text-anchor="middle">?</text>
+          </g>
+          <g>
+            <rect x="70" y="30" width="9" height="9" fill="#c8862a"/>
+            <rect x="70" y="30" width="9" height="2" fill="#ffd700"/>
+            <rect x="70" y="37" width="9" height="2" fill="#8a5a1c"/>
+            <text x="74.5" y="37.5" font-size="7" font-family="monospace" fill="#fff" text-anchor="middle">?</text>
+          </g>
+          <g fill="#ffd700">
+            <rect x="52" y="24" width="4" height="7"/>
+            <rect x="76" y="16" width="4" height="7"/>
+            <rect x="34" y="20" width="4" height="7"/>
+          </g>
+        </svg>
+
+        <div class="title-art">
+          <div class="fighter lula">
+            <svg viewBox="0 1 16 19" class="idle" aria-hidden="true"><use href="#sp-lula"/></svg>
+            <span class="tag">LULA</span>
+          </div>
+          <div class="vs">VS</div>
+          <div class="fighter flavio">
+            <svg viewBox="0 1 16 19" class="idle" style="animation-delay:.35s" aria-hidden="true"><use href="#sp-flavio"/></svg>
+            <span class="tag">FLÁVIO</span>
+          </div>
+        </div>
+
+        <h1 class="wordmark">
+          <span class="vs-l">LULA</span>
+          <span class="ou">OU</span>
+          <span class="vs-f">FLÁVIO</span>
+        </h1>
+
+        <div class="title-menu" style="margin-top:.9em">
+          <button class="btn btn--play btn--wide" data-go="registro">▶ Jogar</button>
+          <button class="btn btn--rank btn--wide" data-go="ranking">🏆 Ver ranking global</button>
+          <button class="btn btn--plans btn--wide" data-plans="lula" data-plans-2="flavio">📄 Ver planos de governo</button>
+        </div>
+
+        <p class="disclaimer">Jogo educativo baseado em propostas públicas registradas no TSE. Sem fins partidários. As respostas não substituem a leitura dos planos de governo.</p>
+      </section>
+
+      <!-- ============================================================
+           2 · REGISTRO
+           ============================================================ -->
+      <section class="screen" id="scr-registro" data-screen-label="02 Cadastro">
+        <div class="center-col">
+          <div class="dialog">
+            <h2 class="rpg-title">Qual é o seu nome?</h2>
+            <label for="inp-name" class="label" style="display:block;margin-bottom:.5em">Apelido no ranking (3–20 caracteres)</label>
+            <input id="inp-name" class="field" type="text" maxlength="20" autocomplete="off" spellcheck="false" placeholder="Digite aqui..." />
+            <p class="err" id="name-err" role="alert"></p>
+            <label class="check" for="inp-consent" style="margin-top:.3em">
+              <input type="checkbox" id="inp-consent" />
+              <span>Concordo em participar do ranking global</span>
+            </label>
+          </div>
+          <button class="btn btn--ok btn--wide" id="btn-start" disabled>Começar</button>
+          <button class="btn btn--ghost btn--wide" data-go="title">← Voltar</button>
+          <p class="hint" style="text-align:center">Sem o consentimento, você joga normalmente — a partida apenas não entra no ranking global.</p>
+        </div>
+      </section>
+
+      <!-- ============================================================
+           3 · QUIZ
+           ============================================================ -->
+      <section class="screen" id="scr-quiz" data-screen-label="03 Quiz">
+        <div class="hud">
+          <div class="bar pix"><div class="fill" id="q-fill"></div></div>
+          <span class="count" id="q-count">1/10</span>
+          <button class="icon-btn" id="btn-mute" title="Ligar/desligar som" aria-label="Ligar ou desligar som">🔊</button>
+        </div>
+
+        <div class="q-zone">
+          <div class="dialog q-box" id="q-box">
+            <div class="q-cat" id="q-cat">SEGURANÇA PÚBLICA</div>
+            <p class="q-text" id="q-text">—</p>
+          </div>
+        </div>
+
+        <!-- Palco do reveal: os candidatos ficam ESCONDIDOS durante a pergunta
+             e só aparecem quando o jogador responde. -->
+        <div class="arena">
+          <div class="fighter lula" id="rev-lula">
+            <div class="face">
+              <svg viewBox="0 1 16 19" aria-hidden="true"><use href="#sp-lula"/></svg>
+              <span class="name">LULA</span>
+            </div>
+            <p class="rev-verb" id="rev-lula-verb"></p>
+          </div>
+          <div class="fighter flavio" id="rev-flavio">
+            <div class="face">
+              <svg viewBox="0 1 16 19" aria-hidden="true"><use href="#sp-flavio"/></svg>
+              <span class="name">FLÁVIO</span>
+            </div>
+            <p class="rev-verb" id="rev-flavio-verb"></p>
+          </div>
+        </div>
+
+        <div class="controls">
+          <button class="answer no"  id="btn-no">NÃO <span class="k">← / A</span></button>
+          <button class="answer yes" id="btn-yes">SIM <span class="k">→ / D</span></button>
+        </div>
+      </section>
+
+      <!-- ============================================================
+           4 · CHECKPOINT
+           ============================================================ -->
+      <section class="screen" id="scr-check" data-screen-label="04 Checkpoint">
+        <div class="sheet">
+          <h2>🏆 Checkpoint!</h2>
+          <p class="sub" id="ck-sub">Você respondeu 10 perguntas!</p>
+
+          <div class="dialog">
+            <p class="label" style="text-align:center;margin:0 0 .7em">Resultado parcial</p>
+            <div class="scores" id="ck-scores"></div>
+            <div class="mini-stats" style="margin-top:.9em">
+              <span><b id="ck-lula">0</b> respostas pró-Lula</span>
+              <span><b id="ck-flavio">0</b> respostas pró-Flávio</span>
+            </div>
+          </div>
+
+          <div class="dialog dark">
+            <p class="label" style="text-align:center;margin:0 0 .6em;color:var(--gold)">Ranking global — top 5</p>
+            <div class="rk-list" id="ck-rank" style="max-height:none"></div>
+          </div>
+
+          <div class="actions">
+            <button class="btn btn--ok btn--wide" id="btn-continue">🔄 Continuar jogando (+10)</button>
+            <button class="btn btn--go btn--wide" id="btn-finish">🏁 Ver resultado final</button>
+            <button class="btn btn--share btn--wide" id="btn-share-ck">📤 Compartilhar</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================
+           5 · RESULTADO FINAL
+           ============================================================ -->
+      <section class="screen" id="scr-result" data-screen-label="05 Resultado">
+        <div class="confetti" id="confetti" aria-hidden="true"></div>
+        <div class="sheet">
+          <h2>Seu resultado</h2>
+
+          <div class="champ enter" id="champ">
+            <div class="crown" id="champ-crown">👑</div>
+            <svg viewBox="0 1 16 19" aria-hidden="true"><use id="champ-use" href="#sp-lula"/></svg>
+            <span class="name" id="champ-name" style="font-family:var(--f-pixel);font-size:var(--ui);letter-spacing:.06em">LULA</span>
+          </div>
+
+          <div class="dialog">
+            <div class="scores" id="rs-scores"></div>
+            <p class="verdict" id="rs-verdict" style="margin-top:.9em">—</p>
+          </div>
+
+          <div class="mini-stats">
+            <span>Você respondeu <b id="rs-total">0</b> perguntas</span>
+            <span><b id="rs-l">0</b> a favor de Lula</span>
+            <span><b id="rs-f">0</b> a favor de Flávio</span>
+          </div>
+
+          <div class="share-row">
+            <button class="btn btn--wa" id="btn-wa">📱 WhatsApp</button>
+            <button class="btn btn--tw" id="btn-tw">🐦 Twitter/X</button>
+          </div>
+
+          <div class="actions">
+            <button class="btn btn--play btn--wide" id="btn-again">🔄 Jogar novamente</button>
+            <button class="btn btn--rank btn--wide" data-go="ranking">📊 Ver ranking completo</button>
+            <button class="btn btn--plans btn--wide" data-plans>📄 Ver planos de governo</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================
+           6 · RANKING GLOBAL
+           ============================================================ -->
+      <section class="screen" id="scr-ranking" data-screen-label="06 Ranking">
+        <div class="sheet">
+          <h2>🏆 Ranking global</h2>
+
+          <div class="tabs" role="tablist">
+            <button class="tab on" data-tab="all" role="tab">Todos</button>
+            <button class="tab" data-tab="lula" role="tab">Lula</button>
+            <button class="tab" data-tab="flavio" role="tab">Flávio</button>
+          </div>
+
+          <div class="dialog" style="padding:.6em">
+            <div class="rk-list" id="gr-list"></div>
+          </div>
+
+          <div class="dialog dark stats-grid">
+            <div><b id="gr-players">0</b> jogadores participaram</div>
+            <div><b id="gr-games">0</b> partidas jogadas</div>
+          </div>
+
+          <button class="btn btn--ghost btn--wide" id="btn-back">← Voltar</button>
+        </div>
+      </section>
+
+    </div>
+
+    <div class="flash" id="flash"></div>
+    <div class="toast" id="toast" hidden></div>
+
+    <!-- Seletor de planos de governo. Substitui a navegação destrutiva:
+         nunca sai da página, então um clique aqui jamais apaga o jogo. -->
+    <div id="plans-modal" class="modal" hidden>
+      <div class="modal-box dialog">
+        <p class="rpg-title" style="margin-bottom:.9em">Planos de governo</p>
+        <p class="hint" style="text-align:center;margin:0 0 .9em">Documentos oficiais registrados no TSE — abrem em nova aba.</p>
+        <a class="btn btn--wide" id="plans-lula" href="#" target="_blank" rel="noopener">📄 Plano do Lula</a>
+        <a class="btn btn--wide" id="plans-flavio" href="#" target="_blank" rel="noopener" style="margin-top:.5em">📄 Plano do Flávio</a>
+        <button class="btn btn--ghost btn--wide" id="plans-close" style="margin-top:.5em">Fechar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==========================================================================
+     SPRITE DEFS — personagens originais 16×20, 1 unidade = 1 px
+     ========================================================================== -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <!-- ============ LULA — tema vermelho, terno azul, careca, barba ============ -->
+    <g id="sp-lula">
+      <!-- pernas -->
+      <rect x="4"  y="17" width="3" height="3" fill="#2b3350"/>
+      <rect x="9"  y="17" width="3" height="3" fill="#2b3350"/>
+      <rect x="3"  y="19" width="4" height="1" fill="#141a2e"/>
+      <rect x="9"  y="19" width="4" height="1" fill="#141a2e"/>
+      <!-- torso: terno azul escuro -->
+      <rect x="3"  y="9"  width="10" height="8" fill="#2f3f6b"/>
+      <rect x="3"  y="9"  width="10" height="1" fill="#3d5083"/>
+      <!-- camisa + gravata -->
+      <rect x="7"  y="9"  width="2" height="6" fill="#f4f6ff"/>
+      <rect x="7"  y="10" width="2" height="4" fill="#c0392b"/>
+      <rect x="6"  y="9"  width="1" height="2" fill="#f4f6ff"/>
+      <rect x="9"  y="9"  width="1" height="2" fill="#f4f6ff"/>
+      <!-- braços -->
+      <rect x="1"  y="10" width="2" height="6" fill="#2f3f6b"/>
+      <rect x="13" y="10" width="2" height="6" fill="#2f3f6b"/>
+      <rect x="1"  y="15" width="2" height="2" fill="#c98a63"/>
+      <rect x="13" y="15" width="2" height="2" fill="#c98a63"/>
+      <!-- pescoço -->
+      <rect x="6"  y="8"  width="4" height="1" fill="#c98a63"/>
+      <!-- cabeça -->
+      <rect x="4"  y="3"  width="8" height="5" fill="#d99668"/>
+      <rect x="4"  y="3"  width="8" height="1" fill="#e2a77c"/>
+      <!-- brilho da careca -->
+      <rect x="5"  y="3"  width="6" height="1" fill="#f0bd92"/>
+      <!-- barba + cabelo -->
+      <rect x="4"  y="6"  width="2" height="2" fill="#b9b4ae"/>
+      <rect x="10" y="6"  width="2" height="2" fill="#b9b4ae"/>
+      <rect x="5"  y="7"  width="6" height="1" fill="#b9b4ae"/>
+      <rect x="4"  y="4"  width="1" height="2" fill="#cfcac3"/>
+      <rect x="11" y="4"  width="1" height="2" fill="#cfcac3"/>
+      <!-- olhos -->
+      <rect x="6"  y="5"  width="1" height="1" fill="#1b1b22"/>
+      <rect x="9"  y="5"  width="1" height="1" fill="#1b1b22"/>
+      <!-- faixa vermelha do tema -->
+      <rect x="3"  y="12" width="1" height="5" fill="#f87171"/>
+      <rect x="12" y="12" width="1" height="5" fill="#f87171"/>
+      <!-- braços erguidos (vitória) -->
+      <rect x="14" y="6"  width="2" height="4" fill="#2f3f6b"/>
+      <rect x="14" y="4"  width="2" height="2" fill="#c98a63"/>
+      <rect x="0"  y="6"  width="2" height="4" fill="#2f3f6b"/>
+      <rect x="0"  y="4"  width="2" height="2" fill="#c98a63"/>
+    </g>
+
+    <!-- ============ FLÁVIO — tema verde, cabelo escuro, polo ============ -->
+    <g id="sp-flavio">
+      <!-- pernas -->
+      <rect x="4"  y="17" width="3" height="3" fill="#243a4e"/>
+      <rect x="9"  y="17" width="3" height="3" fill="#243a4e"/>
+      <rect x="3"  y="19" width="4" height="1" fill="#101c28"/>
+      <rect x="9"  y="19" width="4" height="1" fill="#101c28"/>
+      <!-- torso: polo verde escuro -->
+      <rect x="3"  y="9"  width="10" height="8" fill="#1f6b3f"/>
+      <rect x="3"  y="9"  width="10" height="1" fill="#28864f"/>
+      <!-- gola -->
+      <rect x="5"  y="9"  width="6" height="1" fill="#f4f6ff"/>
+      <rect x="7"  y="9"  width="2" height="2" fill="#d8dee9"/>
+      <!-- braços -->
+      <rect x="1"  y="10" width="2" height="6" fill="#1f6b3f"/>
+      <rect x="13" y="10" width="2" height="6" fill="#1f6b3f"/>
+      <rect x="1"  y="15" width="2" height="2" fill="#e0a97e"/>
+      <rect x="13" y="15" width="2" height="2" fill="#e0a97e"/>
+      <!-- pescoço -->
+      <rect x="6"  y="8"  width="4" height="1" fill="#e0a97e"/>
+      <!-- cabeça -->
+      <rect x="4"  y="3"  width="8" height="5" fill="#eab389"/>
+      <rect x="4"  y="3"  width="8" height="1" fill="#f2c39d"/>
+      <!-- cabelo -->
+      <rect x="4"  y="2"  width="8" height="2" fill="#221c18"/>
+      <rect x="3"  y="2"  width="1" height="3" fill="#221c18"/>
+      <rect x="12" y="2"  width="1" height="3" fill="#221c18"/>
+      <rect x="5"  y="1"  width="6" height="1" fill="#2e2621"/>
+      <!-- olhos -->
+      <rect x="6"  y="5"  width="1" height="1" fill="#161d24"/>
+      <rect x="9"  y="5"  width="1" height="1" fill="#161d24"/>
+      <!-- faixa verde do tema -->
+      <rect x="3"  y="12" width="1" height="5" fill="#4ade80"/>
+      <rect x="12" y="12" width="1" height="5" fill="#4ade80"/>
+      <!-- braços erguidos -->
+      <rect x="14" y="6"  width="2" height="4" fill="#1f6b3f"/>
+      <rect x="14" y="4"  width="2" height="2" fill="#e0a97e"/>
+      <rect x="0"  y="6"  width="2" height="4" fill="#1f6b3f"/>
+      <rect x="0"  y="4"  width="2" height="2" fill="#e0a97e"/>
+    </g>
+  </defs>
+</svg>
+
+<script>
+/* ==========================================================================
+   LULA OU FLAVIO — protótipo
+   Máquina de estados: TITLE → REGISTRO → QUIZ → CHECKPOINT → RESULT
+                                          ↘ RANKING ↗
+   ========================================================================== */
+(function(){
+'use strict';
+
+/* ---------- 1 · BANCO DE PERGUNTAS (100 perguntas, 10 categorias) ----------
+   candidate = quem DEFENDE a posição descrita.
+   Baseado nos Planos de Governo registrados no TSE (Eleições 2026).  */
+const QUESTIONS = [
+
+  /* ========================================================================
+     1 · SEGURANÇA PÚBLICA — 10 perguntas (5 Lula + 5 Flávio)
+     ======================================================================== */
+  { id: 1,  category: 'Segurança Pública', candidate: 'lula',   text: 'Manter o controle e a restrição do porte de armas de fogo no país?', source: 'Diretrizes de segurança pública' },
+  { id: 2,  category: 'Segurança Pública', candidate: 'lula',   text: 'Criar uma política nacional de redução da letalidade policial e de enfrentamento ao racismo institucional?', source: 'Diretrizes de segurança pública' },
+  { id: 3,  category: 'Segurança Pública', candidate: 'lula',   text: 'Priorizar a inteligência, a investigação e a prevenção em vez de ampliar o encarceramento?', source: 'Diretrizes de segurança pública' },
+  { id: 4,  category: 'Segurança Pública', candidate: 'lula',   text: 'Integrar as polícias estaduais e federais no combate ao crime organizado?', source: 'Diretrizes de segurança pública' },
+  { id: 5,  category: 'Segurança Pública', candidate: 'lula',   text: 'Criar programas de prevenção à violência e de inclusão social em territórios vulneráveis?', source: 'Diretrizes de segurança pública' },
+  { id: 6,  category: 'Segurança Pública', candidate: 'flavio', text: 'Reduzir a maioridade penal para crimes hediondos e graves?', source: 'Diretrizes de segurança pública' },
+  { id: 7,  category: 'Segurança Pública', candidate: 'flavio', text: 'Construir mais presídios e restringir a progressão de pena para crimes violentos?', source: 'Diretrizes de segurança pública' },
+  { id: 8,  category: 'Segurança Pública', candidate: 'flavio', text: 'Ampliar o porte de armas para a população civil?', source: 'Diretrizes de segurança pública' },
+  { id: 9,  category: 'Segurança Pública', candidate: 'flavio', text: 'Criar tropas de elite nas fronteiras para combater o narcotráfico?', source: 'Diretrizes de segurança pública' },
+  { id: 10, category: 'Segurança Pública', candidate: 'flavio', text: 'Responsabilizar adolescentes que cometem crimes graves como adultos?', source: 'Diretrizes de segurança pública' },
+
+  /* ========================================================================
+     2 · EDUCAÇÃO — 10 perguntas (5 Lula + 5 Flávio)
+     ======================================================================== */
+  { id: 11, category: 'Educação', candidate: 'lula',   text: 'Ampliar a oferta de creches e pré-escolas públicas gratuitas?', source: 'Diretrizes de educação' },
+  { id: 12, category: 'Educação', candidate: 'lula',   text: 'Aumentar o investimento em universidades públicas e em bolsas de pesquisa?', source: 'Diretrizes de educação' },
+  { id: 13, category: 'Educação', candidate: 'lula',   text: 'Manter e ampliar os programas de alfabetização na idade certa?', source: 'Diretrizes de educação' },
+  { id: 14, category: 'Educação', candidate: 'lula',   text: 'Garantir recursos para a formação continuada dos professores da rede pública?', source: 'Diretrizes de educação' },
+  { id: 15, category: 'Educação', candidate: 'lula',   text: 'Ampliar a educação em tempo integral nas escolas públicas?', source: 'Diretrizes de educação' },
+  { id: 16, category: 'Educação', candidate: 'flavio', text: 'Criar escolas cívico-militares em todo o país?', source: 'Diretrizes de educação' },
+  { id: 17, category: 'Educação', candidate: 'flavio', text: 'Adotar o método fônico na alfabetização das crianças?', source: 'Diretrizes de educação' },
+  { id: 18, category: 'Educação', candidate: 'flavio', text: 'Combater a chamada doutrinação ideológica nas escolas públicas?', source: 'Diretrizes de educação' },
+  { id: 19, category: 'Educação', candidate: 'flavio', text: 'Criar vouchers educacionais para famílias sem vaga na rede pública?', source: 'Diretrizes de educação' },
+  { id: 20, category: 'Educação', candidate: 'flavio', text: 'Ampliar o ensino técnico profissionalizante voltado ao mercado de trabalho?', source: 'Diretrizes de educação' },
+
+  /* ========================================================================
+     3 · SAÚDE — 10 perguntas (5 Lula + 5 Flávio)
+     ======================================================================== */
+  { id: 21, category: 'Saúde', candidate: 'lula',   text: 'Fortalecer o SUS como sistema único, universal e gratuito?', source: 'Diretrizes de saúde' },
+  { id: 22, category: 'Saúde', candidate: 'lula',   text: 'Aumentar o financiamento federal da saúde pública?', source: 'Diretrizes de saúde' },
+  { id: 23, category: 'Saúde', candidate: 'lula',   text: 'Ampliar a produção nacional de vacinas e medicamentos?', source: 'Diretrizes de saúde' },
+  { id: 24, category: 'Saúde', candidate: 'lula',   text: 'Garantir atendimento odontológico e de saúde mental pelo SUS?', source: 'Diretrizes de saúde' },
+  { id: 25, category: 'Saúde', candidate: 'lula',   text: 'Ampliar a atenção básica e o atendimento de saúde nas comunidades?', source: 'Diretrizes de saúde' },
+  { id: 26, category: 'Saúde', candidate: 'flavio', text: 'Criar um prontuário eletrônico único nacional para todos os cidadãos?', source: 'Diretrizes de saúde' },
+  { id: 27, category: 'Saúde', candidate: 'flavio', text: 'Usar inteligência artificial no atendimento da saúde pública?', source: 'Diretrizes de saúde' },
+  { id: 28, category: 'Saúde', candidate: 'flavio', text: 'Digitalizar e zerar as filas do INSS com tecnologia?', source: 'Diretrizes de saúde' },
+  { id: 29, category: 'Saúde', candidate: 'flavio', text: 'Priorizar a saúde preventiva em vez do tratamento curativo?', source: 'Diretrizes de saúde' },
+  { id: 30, category: 'Saúde', candidate: 'flavio', text: 'Criar programas de atendimento domiciliar para idosos dependentes?', source: 'Diretrizes de saúde' },
+
+  /* ========================================================================
+     4 · ECONOMIA & TRIBUTOS — 15 perguntas (7 Lula + 8 Flávio)
+     ======================================================================== */
+  { id: 31, category: 'Economia & Tributos', candidate: 'lula',   text: 'Aumentar a tributação sobre a renda dos super-ricos e grandes fortunas?', source: 'Diretrizes econômicas' },
+  { id: 32, category: 'Economia & Tributos', candidate: 'lula',   text: 'Taxar offshores e fundos exclusivos de investidores?', source: 'Diretrizes econômicas' },
+  { id: 33, category: 'Economia & Tributos', candidate: 'lula',   text: 'Manter e fortalecer a CLT e os direitos trabalhistas?', source: 'Diretrizes econômicas' },
+  { id: 34, category: 'Economia & Tributos', candidate: 'lula',   text: 'Manter o salário mínimo com reajuste acima da inflação?', source: 'Diretrizes econômicas' },
+  { id: 35, category: 'Economia & Tributos', candidate: 'lula',   text: 'Fortalecer os sindicatos e a negociação coletiva dos trabalhadores?', source: 'Diretrizes econômicas' },
+  { id: 36, category: 'Economia & Tributos', candidate: 'lula',   text: 'Manter o equilíbrio fiscal sem cortar os investimentos sociais?', source: 'Diretrizes econômicas' },
+  { id: 37, category: 'Economia & Tributos', candidate: 'lula',   text: 'Manter e ampliar programas de transferência de renda como o Bolsa Família?', source: 'Diretrizes econômicas' },
+  { id: 38, category: 'Economia & Tributos', candidate: 'flavio', text: 'Reduzir os impostos sobre o consumo para baixar os preços?', source: 'Diretrizes econômicas' },
+  { id: 39, category: 'Economia & Tributos', candidate: 'flavio', text: 'Simplificar a conta de luz, eliminando taxas e encargos ocultos?', source: 'Diretrizes econômicas' },
+  { id: 40, category: 'Economia & Tributos', candidate: 'flavio', text: 'Reduzir o custo do trabalho para as empresas contratarem mais?', source: 'Diretrizes econômicas' },
+  { id: 41, category: 'Economia & Tributos', candidate: 'flavio', text: 'Priorizar o trabalhador individual em relação aos sindicatos?', source: 'Diretrizes econômicas' },
+  { id: 42, category: 'Economia & Tributos', candidate: 'flavio', text: 'Reduzir o tamanho da máquina pública com uma reforma administrativa?', source: 'Diretrizes econômicas' },
+  { id: 43, category: 'Economia & Tributos', candidate: 'flavio', text: 'Zerar o déficit público para reduzir juros e inflação?', source: 'Diretrizes econômicas' },
+  { id: 44, category: 'Economia & Tributos', candidate: 'flavio', text: 'Facilitar o crédito para pequenos empreendedores com juros menores?', source: 'Diretrizes econômicas' },
+  { id: 45, category: 'Economia & Tributos', candidate: 'flavio', text: 'Combater fraudes no INSS e nos auxílios sociais com auditoria rigorosa?', source: 'Diretrizes econômicas' },
+
+  /* ========================================================================
+     5 · MEIO AMBIENTE & ENERGIA — 10 perguntas (5 Lula + 5 Flávio)
+     ======================================================================== */
+  { id: 46, category: 'Meio Ambiente & Energia', candidate: 'lula',   text: 'Combater o desmatamento ilegal na Amazônia com fiscalização reforçada?', source: 'Diretrizes ambientais' },
+  { id: 47, category: 'Meio Ambiente & Energia', candidate: 'lula',   text: 'Expandir as energias solar e eólica no país?', source: 'Diretrizes ambientais' },
+  { id: 48, category: 'Meio Ambiente & Energia', candidate: 'lula',   text: 'Fortalecer a agricultura familiar e a agroecologia?', source: 'Diretrizes ambientais' },
+  { id: 49, category: 'Meio Ambiente & Energia', candidate: 'lula',   text: 'Proteger terras indígenas e quilombolas contra invasões e garimpo ilegal?', source: 'Diretrizes ambientais' },
+  { id: 50, category: 'Meio Ambiente & Energia', candidate: 'lula',   text: 'Criar um fundo nacional para reparação de danos ambientais?', source: 'Diretrizes ambientais' },
+  { id: 51, category: 'Meio Ambiente & Energia', candidate: 'flavio', text: 'Regulamentar a exploração mineral em novas áreas, incluindo terras indígenas?', source: 'Diretrizes ambientais' },
+  { id: 52, category: 'Meio Ambiente & Energia', candidate: 'flavio', text: 'Reduzir a burocracia do licenciamento ambiental para obras de infraestrutura?', source: 'Diretrizes ambientais' },
+  { id: 53, category: 'Meio Ambiente & Energia', candidate: 'flavio', text: 'Explorar gás não convencional para ampliar a produção de energia?', source: 'Diretrizes ambientais' },
+  { id: 54, category: 'Meio Ambiente & Energia', candidate: 'flavio', text: 'Tratar o meio ambiente como ativo econômico para gerar riqueza?', source: 'Diretrizes ambientais' },
+  { id: 55, category: 'Meio Ambiente & Energia', candidate: 'flavio', text: 'Reduzir encargos e taxas da energia para baratear a conta de luz?', source: 'Diretrizes ambientais' },
+
+  /* ========================================================================
+     6 · DIREITOS SOCIAIS — 10 perguntas (5 Lula + 5 Flávio)
+     ======================================================================== */
+  { id: 56, category: 'Direitos Sociais', candidate: 'lula',   text: 'Ampliar as cotas raciais e sociais nas universidades públicas?', source: 'Diretrizes sociais' },
+  { id: 57, category: 'Direitos Sociais', candidate: 'lula',   text: 'Criar políticas públicas específicas para a população LGBTQIA+?', source: 'Diretrizes sociais' },
+  { id: 58, category: 'Direitos Sociais', candidate: 'lula',   text: 'Fortalecer a igualdade salarial entre homens e mulheres?', source: 'Diretrizes sociais' },
+  { id: 59, category: 'Direitos Sociais', candidate: 'lula',   text: 'Ampliar o acesso à moradia popular e à regularização fundiária?', source: 'Diretrizes sociais' },
+  { id: 60, category: 'Direitos Sociais', candidate: 'lula',   text: 'Criar um plano nacional de enfrentamento à fome e à pobreza extrema?', source: 'Diretrizes sociais' },
+  { id: 61, category: 'Direitos Sociais', candidate: 'flavio', text: 'Criar uma central de atendimento com aplicativo de denúncia para proteger mulheres?', source: 'Diretrizes sociais' },
+  { id: 62, category: 'Direitos Sociais', candidate: 'flavio', text: 'Adotar tolerância zero para o feminicídio, com penas mais rigorosas?', source: 'Diretrizes sociais' },
+  { id: 63, category: 'Direitos Sociais', candidate: 'flavio', text: 'Oferecer bônus de internet para mulheres vítimas de violência doméstica?', source: 'Diretrizes sociais' },
+  { id: 64, category: 'Direitos Sociais', candidate: 'flavio', text: 'Priorizar a capacitação profissional para mulheres chefes de família?', source: 'Diretrizes sociais' },
+  { id: 65, category: 'Direitos Sociais', candidate: 'flavio', text: 'Criar um programa de casa segura para mulheres em situação de risco?', source: 'Diretrizes sociais' },
+
+  /* ========================================================================
+     7 · SOBERANIA & RELAÇÕES INTERNACIONAIS — 10 perguntas (5 Lula + 5 Flávio)
+     ======================================================================== */
+  { id: 66, category: 'Soberania & Relações Internacionais', candidate: 'lula',   text: 'Fortalecer o BRICS e a cooperação com países emergentes?', source: 'Diretrizes de política externa' },
+  { id: 67, category: 'Soberania & Relações Internacionais', candidate: 'lula',   text: 'Manter uma política externa independente, sem alinhamento automático aos EUA?', source: 'Diretrizes de política externa' },
+  { id: 68, category: 'Soberania & Relações Internacionais', candidate: 'lula',   text: 'Investir em cooperação técnica com países da África e da América Latina?', source: 'Diretrizes de política externa' },
+  { id: 69, category: 'Soberania & Relações Internacionais', candidate: 'lula',   text: 'Defender o multilateralismo e o fortalecimento da ONU?', source: 'Diretrizes de política externa' },
+  { id: 70, category: 'Soberania & Relações Internacionais', candidate: 'lula',   text: 'Manter relações comerciais e diplomáticas com a China e a Rússia?', source: 'Diretrizes de política externa' },
+  { id: 71, category: 'Soberania & Relações Internacionais', candidate: 'flavio', text: 'Aproximar o Brasil dos Estados Unidos e de alianças ocidentais?', source: 'Diretrizes de política externa' },
+  { id: 72, category: 'Soberania & Relações Internacionais', candidate: 'flavio', text: 'Priorizar acordos comerciais que protejam a indústria nacional?', source: 'Diretrizes de política externa' },
+  { id: 73, category: 'Soberania & Relações Internacionais', candidate: 'flavio', text: 'Conduzir a política externa com foco comercial e não ideológico?', source: 'Diretrizes de política externa' },
+  { id: 74, category: 'Soberania & Relações Internacionais', candidate: 'flavio', text: 'Fortalecer as Forças Armadas para garantir a soberania nas fronteiras?', source: 'Diretrizes de política externa' },
+  { id: 75, category: 'Soberania & Relações Internacionais', candidate: 'flavio', text: 'Cobrar reciprocidade comercial de países que taxam produtos brasileiros?', source: 'Diretrizes de política externa' },
+
+  /* ========================================================================
+     8 · INFRAESTRUTURA & TECNOLOGIA — 10 perguntas (5 Lula + 5 Flávio)
+     ======================================================================== */
+  { id: 76, category: 'Infraestrutura & Tecnologia', candidate: 'lula',   text: 'Ampliar os investimentos públicos em infraestrutura, como o Novo PAC?', source: 'Diretrizes de infraestrutura' },
+  { id: 77, category: 'Infraestrutura & Tecnologia', candidate: 'lula',   text: 'Investir em tecnologia nacional e na produção de semicondutores?', source: 'Diretrizes de infraestrutura' },
+  { id: 78, category: 'Infraestrutura & Tecnologia', candidate: 'lula',   text: 'Ampliar a conectividade e a inclusão digital nas escolas públicas?', source: 'Diretrizes de infraestrutura' },
+  { id: 79, category: 'Infraestrutura & Tecnologia', candidate: 'lula',   text: 'Investir em pesquisa científica e inovação nas universidades e institutos?', source: 'Diretrizes de infraestrutura' },
+  { id: 80, category: 'Infraestrutura & Tecnologia', candidate: 'lula',   text: 'Expandir o saneamento básico e o acesso à água potável?', source: 'Diretrizes de infraestrutura' },
+  { id: 81, category: 'Infraestrutura & Tecnologia', candidate: 'flavio', text: 'Tratar a internet como infraestrutura essencial, como água e energia?', source: 'Diretrizes de infraestrutura' },
+  { id: 82, category: 'Infraestrutura & Tecnologia', candidate: 'flavio', text: 'Digitalizar todos os serviços públicos federais?', source: 'Diretrizes de infraestrutura' },
+  { id: 83, category: 'Infraestrutura & Tecnologia', candidate: 'flavio', text: 'Criar um marco regulatório para o uso de inteligência artificial no setor público?', source: 'Diretrizes de infraestrutura' },
+  { id: 84, category: 'Infraestrutura & Tecnologia', candidate: 'flavio', text: 'Reduzir a burocracia para abrir empresas e negócios?', source: 'Diretrizes de infraestrutura' },
+  { id: 85, category: 'Infraestrutura & Tecnologia', candidate: 'flavio', text: 'Investir em ferrovias, hidrovias e logística para reduzir custos de transporte?', source: 'Diretrizes de infraestrutura' },
+
+  /* ========================================================================
+     9 · CULTURA, ESPORTE & LAZER — 7 perguntas (4 Lula + 3 Flávio)
+     ======================================================================== */
+  { id: 86, category: 'Cultura, Esporte & Lazer', candidate: 'lula',   text: 'Manter e ampliar as leis de incentivo à cultura?', source: 'Diretrizes de cultura e esporte' },
+  { id: 87, category: 'Cultura, Esporte & Lazer', candidate: 'lula',   text: 'Investir no esporte de base e no lazer nas comunidades e escolas?', source: 'Diretrizes de cultura e esporte' },
+  { id: 88, category: 'Cultura, Esporte & Lazer', candidate: 'lula',   text: 'Fortalecer o turismo cultural e comunitário?', source: 'Diretrizes de cultura e esporte' },
+  { id: 89, category: 'Cultura, Esporte & Lazer', candidate: 'lula',   text: 'Garantir financiamento público para a cultura e os artistas?', source: 'Diretrizes de cultura e esporte' },
+  { id: 90, category: 'Cultura, Esporte & Lazer', candidate: 'flavio', text: 'Ampliar a prática esportiva nas escolas, formando atletas desde cedo?', source: 'Diretrizes de cultura e esporte' },
+  { id: 91, category: 'Cultura, Esporte & Lazer', candidate: 'flavio', text: 'Criar bolsas esportivas para atletas de alto rendimento?', source: 'Diretrizes de cultura e esporte' },
+  { id: 92, category: 'Cultura, Esporte & Lazer', candidate: 'flavio', text: 'Valorizar e preservar os patrimônios históricos e culturais regionais?', source: 'Diretrizes de cultura e esporte' },
+
+  /* ========================================================================
+     10 · INSTITUIÇÕES & DEMOCRACIA — 8 perguntas (4 Lula + 4 Flávio)
+     ======================================================================== */
+  { id: 93, category: 'Instituições & Democracia', candidate: 'lula',   text: 'Fortalecer a participação social com conselhos e orçamento participativo?', source: 'Diretrizes institucionais' },
+  { id: 94, category: 'Instituições & Democracia', candidate: 'lula',   text: 'Defender a democracia e as instituições contra tentativas de ruptura?', source: 'Diretrizes institucionais' },
+  { id: 95, category: 'Instituições & Democracia', candidate: 'lula',   text: 'Fortalecer os órgãos de controle e transparência do governo?', source: 'Diretrizes institucionais' },
+  { id: 96, category: 'Instituições & Democracia', candidate: 'lula',   text: 'Ampliar a transparência e o acesso à informação pública?', source: 'Diretrizes institucionais' },
+  { id: 97, category: 'Instituições & Democracia', candidate: 'flavio', text: 'Acabar com a reeleição para presidente, governador e prefeito?', source: 'Diretrizes institucionais' },
+  { id: 98, category: 'Instituições & Democracia', candidate: 'flavio', text: 'Limitar as decisões individuais de ministros do Supremo Tribunal Federal?', source: 'Diretrizes institucionais' },
+  { id: 99, category: 'Instituições & Democracia', candidate: 'flavio', text: 'Garantir ampla liberdade de expressão, sem censura nas redes sociais?', source: 'Diretrizes institucionais' },
+  { id: 100, category: 'Instituições & Democracia', candidate: 'flavio', text: 'Reduzir o número de ministérios do governo federal?', source: 'Diretrizes institucionais' }
+
+];
+
+const TOTAL_CATEGORIES = 10;
+const PLANS = {
+  lula:   'https://www.tse.jus.br/eleicoes/eleicoes-2026-content/propostas-de-governo-dos-candidatos-ao-cargo-de-presidente-da-republica-eleicoes-2026/lula-propostas-de-governo',
+  flavio: 'https://www.tse.jus.br/eleicoes/eleicoes-2026-content/propostas-de-governo-dos-candidatos-ao-cargo-de-presidente-da-republica-eleicoes-2026/flavio-bolsonaro'
+};
+const GAME_URL = 'https://github.com/JadR0ck/lula-ou-flavio';
+const LS_RANK = 'lof.ranking.v1';
+const LS_MUTE = 'lof.muted';
+const MIN_INTERVAL = 1500;   // ms entre respostas (spec §5.4, anti-bot)
+/* tempo que o reveal fica na tela antes de pular para a próxima pergunta.
+   1.5s era rápido demais para ler quem é o candidato — 2.4s dá leitura
+   confortável sem fazer a partida arrastar. */
+const REVEAL_MS = 2400;
+const BAD_WORDS = ['merda','porra','caralho','buceta','puta','puto','foder','fuder','viado','cuzao','cu','idiota','otario','babaca','arrombado','desgraçado','desgracado'];
+const BLOCKED_NAMES = ['asdasd','asdf','qwerty','aaaa','aaaaa','123456','12345','lkjhg','zxcvb'];
+
+/* ---------- 2 · ESTADO --------------------------------------------------- */
+const S = {
+  screen: 'title',
+  name: '',
+  consent: false,
+  pool: [],          // ids restantes
+  asked: [],         // perguntas já respondidas nesta sessão
+  answers: [],       // {id, category, candidate, said:'sim'|'nao', pointsTo:'lula'|'flavio'}
+  current: null,
+  round: 0,          // índice da rodada (cada rodada = 10 perguntas)
+  lastAnswerAt: 0,
+  sawFirstQuestion: false,
+  muted: localStorage.getItem(LS_MUTE) === '1',
+  lastResult: null,
+  rankTab: 'all'
+};
+
+const score = () => {
+  let l = 0, f = 0;
+  S.answers.forEach(a => a.pointsTo === 'lula' ? l++ : f++);
+  return { l, f, total: S.answers.length };
+};
+
+/* ---------- 3 · Helpers de DOM ------------------------------------------ */
+const $  = s => document.querySelector(s);
+const $$ = s => Array.prototype.slice.call(document.querySelectorAll(s));
+const screens = {};
+['title','registro','quiz','check','result','ranking'].forEach(k => screens[k] = document.getElementById('scr-'+k));
+
+function show(name){
+  Object.keys(screens).forEach(k => {
+    const el = screens[k];
+    const on = k === name;
+    el.classList.toggle('on', on);
+    if (on){ el.classList.remove('fade-in'); void el.offsetWidth; el.classList.add('fade-in'); el.scrollTop = 0; }
+  });
+  S.screen = name;
+  deckBg(name);
+}
+
+function deckBg(name){
+  const bg = $('#deckBg');
+  bg.className = 'bg ' + (
+    name === 'title'   ? 'bg-world'  :
+    name === 'registro'? 'bg-world'  :
+    name === 'quiz'    ? 'bg-quiz'   :
+    name === 'result'  ? 'bg-palace' : 'bg-dark'
+  );
+  $('#stars').style.display = (name === 'title' || name === 'registro') ? 'block' : 'none';
+}
+
+let toastTimer;
+function toast(msg, ms){
+  const t = $('#toast');
+  t.textContent = msg; t.hidden = false;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { t.hidden = true; }, ms || 2200);
+}
+
+/* ---------- 4 · ÁUDIO (WebAudio, sem mp3 externo) ------------------------ */
+const Audio_ = (function(){
+  let ctx = null;
+  const ac = () => { if (!ctx) { const C = window.AudioContext || window.webkitAudioContext; if (C) ctx = new C(); } return ctx; };
+  function tone(freq, start, dur, type, gain){
+    const c = ac(); if (!c || S.muted) return;
+    const o = c.createOscillator(), g = c.createGain();
+    o.type = type || 'square';
+    o.frequency.setValueAtTime(freq, c.currentTime + start);
+    g.gain.setValueAtTime(0.0001, c.currentTime + start);
+    g.gain.exponentialRampToValueAtTime(gain || 0.16, c.currentTime + start + 0.012);
+    g.gain.exponentialRampToValueAtTime(0.0001, c.currentTime + start + dur);
+    o.connect(g); g.connect(c.destination);
+    o.start(c.currentTime + start); o.stop(c.currentTime + start + dur + 0.02);
+  }
+  return {
+    unlock(){ const c = ac(); if (c && c.state === 'suspended') c.resume(); },
+    /* urna eletrônica: beep curto de confirmação em duas notas */
+    urna(){ tone(880, 0, 0.10, 'square', 0.20); tone(1318, 0.10, 0.14, 'square', 0.18); },
+    hover(){ tone(1500, 0, 0.035, 'square', 0.05); },
+    /* fanfarra de fim de fase */
+    checkpoint(){ [523,659,784,1046].forEach((f,i) => tone(f, i*0.11, 0.13, 'square', 0.15)); },
+    /* fanfarra de vitória */
+    victory(){ [523,659,784,1046,1318,1046,1318].forEach((f,i) => tone(f, i*0.13, 0.16, 'square', 0.16)); }
+  };
+})();
+
+/* ---------- 5 · ESTRELAS PIXELADAS -------------------------------------- */
+(function(){
+  const box = $('#stars');
+  let html = '';
+  for (let i = 0; i < 34; i++){
+    const x = (Math.random()*100).toFixed(2), y = (Math.random()*58).toFixed(2);
+    const d = (Math.random()*1.8).toFixed(2), s = Math.random() < .25 ? 6 : 3;
+    html += '<i class="star" style="left:'+x+'%;top:'+y+'%;width:'+s+'px;height:'+s+'px;animation-delay:'+d+'s"></i>';
+  }
+  box.innerHTML = html;
+})();
+
+/* ---------- 6 · TITLE / NAV --------------------------------------------- */
+function go(name){
+  if (name === 'registro'){ show('registro'); inpName.value = S.name; refreshStart(); setTimeout(()=>$('#inp-name').focus(), 120); return; }
+  if (name === 'ranking'){ renderRanking(); show('ranking'); return; }
+  show(name);
+}
+document.addEventListener('click', function(e){
+  const g = e.target.closest('[data-go]');
+  if (g){ Audio_.unlock(); go(g.getAttribute('data-go')); return; }
+  const p = e.target.closest('[data-plans]');
+  if (p){ Audio_.unlock(); openPlans(); }
+});
+
+/* ---------- 7 · MODAL DE PLANOS ----------------------------------------- */
+/* Antes este botão fazia window.open e, se o popup fosse bloqueado (é o caso
+   dentro do iframe do preview), caía em location.href — navegando a página
+   inteira embora e APAGANDO o jogo. Um clique matava o app. Agora ele só
+   abre um modal local; os planos abrem em nova aba por links reais, e nenhum
+   caminho de código navega a página atual. */
+function openPlans(){
+  $('#plans-lula').href = PLANS.lula;
+  $('#plans-flavio').href = PLANS.flavio;
+  $('#plans-modal').hidden = false;
+}
+function closePlans(){ $('#plans-modal').hidden = true; }
+$('#plans-close').addEventListener('click', closePlans);
+$('#plans-modal').addEventListener('click', function(e){ if (e.target === this) closePlans(); });
+document.addEventListener('keydown', function(e){ if (e.key === 'Escape') closePlans(); });
+
+/* ---------- 8 · REGISTRO ------------------------------------------------ */
+const inpName = $('#inp-name'), inpConsent = $('#inp-consent');
+const btnStart = $('#btn-start'), nameErr = $('#name-err');
+
+function validateName(raw){
+  const v = (raw || '').trim();
+  if (v.length < 3) return 'Mínimo de 3 caracteres.';
+  if (v.length > 20) return 'Máximo de 20 caracteres.';
+  if (!/[a-zA-ZÀ-ÿ]/.test(v)) return 'O nome precisa conter letras.';
+  const flat = v.toLowerCase().replace(/[^a-z0-9à-ÿ]/g, '');
+  if (BLOCKED_NAMES.indexOf(flat) !== -1) return 'Escolha um apelido menos genérico.';
+  if (/^(.)\1{2,}$/.test(flat)) return 'Escolha um apelido menos repetitivo.';
+  for (let i = 0; i < BAD_WORDS.length; i++){ if (flat.indexOf(BAD_WORDS[i]) !== -1) return 'Este apelido não é permitido.'; }
+  return '';
+}
+function refreshStart(){
+  const err = validateName(inpName.value);
+  btnStart.disabled = !!err;
+  nameErr.textContent = (inpName.value.trim().length > 0 && err) ? err : '';
+}
+inpName.addEventListener('input', refreshStart);
+inpName.addEventListener('keydown', e => { if (e.key === 'Enter' && !btnStart.disabled) btnStart.click(); });
+btnStart.addEventListener('click', function(){
+  const err = validateName(inpName.value);
+  if (err){ nameErr.textContent = err; return; }
+  Audio_.unlock();
+  S.name = inpName.value.trim();
+  S.consent = inpConsent.checked;
+  beginGame();
+});
+
+/* ---------- 9 · FLUXO DO JOGO ------------------------------------------- */
+function shuffle(a){
+  for (let i = a.length - 1; i > 0; i--){ const j = Math.floor(Math.random()*(i+1)); const t = a[i]; a[i] = a[j]; a[j] = t; }
+  return a;
+}
+
+function beginGame(){
+  S.pool = shuffle(QUESTIONS.map(q => q.id));
+  S.asked = [];
+  S.answers = [];
+  S.round = 0;
+  S.lastResult = null;
+  S.sawFirstQuestion = false;
+  nextQuestion();
+  show('quiz');
+}
+
+function nextQuestion(){
+  if (S.pool.length === 0){
+    toast('Você respondeu todas as perguntas disponíveis!');
+    finish();
+    return;
+  }
+  if (S.answers.length > 0 && S.answers.length % 10 === 0){
+    openCheckpoint();
+    return;
+  }
+  const id = S.pool.shift();
+  const q = QUESTIONS.filter(x => x.id === id)[0];
+  S.current = q;
+  S.asked.push(q);
+
+  $('#q-cat').textContent = q.category.toUpperCase();
+  $('#q-text').textContent = q.text;
+  const n = S.answers.length + 1;
+  const total = Math.max(10, Math.ceil(n/10)*10);
+  $('#q-count').textContent = n + '/' + total;
+  const pct = ((n - 1) / total) * 100;
+  $('#q-fill').style.width = pct + '%';
+
+  const box = $('#q-box');
+  box.classList.remove('q-enter'); void box.offsetWidth; box.classList.add('q-enter');
+
+  clearReveal();
+  /* O cooldown anti-bot (spec §5.4) encerra no instante em que a resposta é
+     aceita — NÃO se estende até a próxima pergunta. Assim ele barra apenas
+     cliques em sequência rápida, sem punir quem lê a pergunta com calma. */
+  clearTimeout(cdTimer);
+  cdEnd = 0;
+  setEnabled(true);
+  S.sawFirstQuestion = true;
+}
+
+/* bloqueia os botões enquanto o intervalo mínimo de resposta está aberto */
+let cdTimer = null, cdEnd = 0;
+function setEnabled(on){
+  $('#btn-yes').disabled = !on;
+  $('#btn-no').disabled = !on;
+}
+function clearReveal(){
+  $$('.arena .fighter').forEach(f => { f.classList.remove('show', 'win'); });
+  $('#rev-lula-verb').textContent = '';
+  $('#rev-flavio-verb').textContent = '';
+}
+
+/* após a resposta, mostra a cara do candidato que a pergunta descreve e diz,
+   em uma linha, o que a resposta do jogador significou. */
+function reveal(q, said){
+  const loser = q.candidate === 'lula' ? 'flavio' : 'lula';
+  const winnerNames = { lula:'LULA', flavio:'FLÁVIO' };
+  const win = $('#rev-' + q.candidate), lose = $('#rev-' + loser);
+  $('#rev-' + q.candidate + '-verb').textContent =
+    said === 'sim'
+      ? 'Esta proposta é de ' + winnerNames[q.candidate] + '.'
+      : 'Esta proposta é de ' + winnerNames[q.candidate] + ' — você discordou, então pontua ' + winnerNames[loser] + '.';
+  $('#rev-' + loser + '-verb').textContent = '';
+  win.classList.add('show');
+  lose.classList.remove('show');
+}
+
+function answer(said){
+  if (!S.current) return;
+  /* botões desabilitados durante a troca de pergunta ou cooldown pendente */
+  if (Date.now() < cdEnd){
+    toast('Calma! Espere um instante antes de responder.');
+    return;
+  }
+  S.lastAnswerAt = Date.now();
+  cdEnd = Date.now() + MIN_INTERVAL;   // janela anti-bot a partir DESTA resposta
+
+  const q = S.current;
+  /* "sim" concorda com a posição descrita → ponto para quem a defende.
+     "não" discorda → ponto para o adversário. */
+  const pointsTo = (said === 'sim') ? q.candidate : (q.candidate === 'lula' ? 'flavio' : 'lula');
+  S.answers.push({ id:q.id, category:q.category, candidate:q.candidate, said:said, pointsTo:pointsTo });
+
+  Audio_.urna();
+  flash(pointsTo);
+  reveal(q, said);
+  setEnabled(false);
+  S.current = null;
+
+  setTimeout(function(){
+    nextQuestion();
+  }, REVEAL_MS);
+}
+
+function flash(who){
+  const el = $('#flash');
+  el.className = 'flash ' + (who === 'lula' ? 'go-l' : 'go-f');
+  void el.offsetWidth;
+  el.style.animation = 'none'; void el.offsetWidth; el.style.animation = '';
+}
+
+$('#btn-yes').addEventListener('click', () => answer('sim'));
+$('#btn-no').addEventListener('click',  () => answer('nao'));
+document.addEventListener('keydown', function(e){
+  if (S.screen !== 'quiz') return;
+  const k = e.key.toLowerCase();
+  /* a seta esquerda responde NÃO (botão da esquerda) e a direita responde SIM
+     (botão da direita), seguindo a posição física de cada botão na tela. */
+  if (k === 'arrowleft'  || k === 'a'){ if (!$('#btn-no').disabled)  answer('nao'); }
+  if (k === 'arrowright' || k === 'd'){ if (!$('#btn-yes').disabled) answer('sim'); }
+});
+
+/* ---------- 10 · CHECKPOINT --------------------------------------------- */
+let ckOpenAt = 0;
+function openCheckpoint(){
+  const sc = score();
+  const pctL = Math.round(sc.l / sc.total * 100);
+  const pctF = 100 - pctL;
+  const bars = $('#ck-scores');
+  bars.innerHTML =
+    '<div class="score-row l"><span class="who">LULA</span><span class="track"><i></i></span><span class="pct">'+pctL+'%</span></div>' +
+    '<div class="score-row f"><span class="who">FLAVIO</span><span class="track"><i></i></span><span class="pct">'+pctF+'%</span></div>';
+  $('#ck-lula').textContent = sc.l;
+  $('#ck-flavio').textContent = sc.f;
+  $('#ck-sub').textContent = 'Você respondeu ' + sc.total + ' perguntas!';
+
+  const still = S.pool.length;
+  const cont = $('#btn-continue');
+  cont.disabled = still === 0;
+  cont.textContent = still === 0 ? '🔄 Banco esgotado' : '🔄 Continuar jogando (+' + Math.min(10, still) + ')';
+
+  $('#ck-rank').innerHTML = rankRows(loadRanking().slice(0, 5));
+  Audio_.checkpoint();
+  show('check');
+  ckOpenAt = Date.now();
+  setTimeout(() => { $('#ck-scores').querySelectorAll('i').forEach((i, idx) => {
+    i.style.width = (idx === 0 ? pctL : pctF) + '%';
+  }); }, 60);
+  /* anti-bot: "continuar"/"final" ficam inertes por 2s (spec §4.4 — tempo mínimo de exibição) */
+  const gate = [$('#btn-continue'), $('#btn-finish')];
+  gate.forEach(b => { if (b !== cont || still > 0) b.setAttribute('disabled',''); });
+  setTimeout(() => { gate.forEach(b => { if (b !== cont || still > 0) b.removeAttribute('disabled'); }); }, 2000);
+}
+$('#btn-continue').addEventListener('click', function(){
+  if (Date.now() - ckOpenAt < 2000) return;
+  S.round++;
+  nextQuestion();
+  show('quiz');
+});
+$('#btn-finish').addEventListener('click', function(){
+  if (Date.now() - ckOpenAt < 2000) return;
+  finish();
+});
+
+/* ---------- 11 · RESULTADO ---------------------------------------------- */
+function finish(){
+  const sc = score();
+  const pctL = sc.total ? Math.round(sc.l / sc.total * 100) : 0;
+  const pctF = 100 - pctL;
+  const tie = sc.l === sc.f;
+  const winner = tie ? 'tie' : (sc.l > sc.f ? 'lula' : 'flavio');
+
+  S.lastResult = { lula:sc.l, flavio:sc.f, total:sc.total, pctLula:pctL, pctFlavio:pctF, winner:winner, saved:false };
+
+  $('#rs-scores').innerHTML =
+    '<div class="score-row l"><span class="who">LULA</span><span class="track"><i></i></span><span class="pct">'+pctL+'%</span></div>' +
+    '<div class="score-row f"><span class="who">FLAVIO</span><span class="track"><i></i></span><span class="pct">'+pctF+'%</span></div>';
+  $('#rs-total').textContent = sc.total;
+  $('#rs-l').textContent = sc.l;
+  $('#rs-f').textContent = sc.f;
+
+  const use = $('#champ-use'), cname = $('#champ-name'), champ = $('#champ');
+  if (tie){
+    /* em empate NINGUÉM é coroado nem recebe brilho dourado — coroar um dos
+       dois sugeriria visualmente que ele venceu. */
+    use.setAttribute('href', '#sp-lula');
+    cname.textContent = 'EMPATE TÉCNICO';
+    cname.style.color = 'var(--gold)';
+    champ.classList.remove('win');
+    $('#champ-crown').style.visibility = 'hidden';
+    $('#rs-verdict').innerHTML = 'Você tem <b>afinidade equilibrada</b> com os dois candidatos — ' + pctL + '% Lula e ' + pctF + '% Flavio nas ' + sc.total + ' perguntas respondidas.';
+  } else {
+    use.setAttribute('href', winner === 'lula' ? '#sp-lula' : '#sp-flavio');
+    cname.textContent = winner === 'lula' ? 'LULA' : 'FLÁVIO';
+    cname.style.color = winner === 'lula' ? 'var(--lula)' : 'var(--flavio)';
+    champ.classList.add('win');
+    $('#champ-crown').style.visibility = 'visible';
+    const w = winner === 'lula' ? pctL : pctF;
+    $('#rs-verdict').innerHTML = 'Suas respostas têm <b>' + w + '% de afinidade</b> com as propostas de <b>' + (winner === 'lula' ? 'LULA' : 'FLÁVIO') + '</b>, com base nas ' + sc.total + ' perguntas respondidas.';
+  }
+
+  champ.classList.remove('enter'); void champ.offsetWidth; champ.classList.add('enter');
+  confetti(winner);
+  Audio_.victory();
+
+  /* persiste no "ranking global" (localStorage) se houve consentimento */
+  if (S.consent && sc.total >= 10){
+    saveRanking({
+      name: S.name,
+      lula: sc.l, flavio: sc.f, total: sc.total,
+      pct: Math.max(pctL, pctF),
+      winner: winner,
+      ts: new Date().toISOString()
+    });
+    S.lastResult.saved = true;
+    toast('Resultado salvo no ranking global!', 1800);
+  } else if (S.consent && sc.total < 10){
+    toast('São necessárias 10+ respostas para entrar no ranking.', 2200);
+  }
+
+  setTimeout(() => { $('#rs-scores').querySelectorAll('i').forEach((i, idx) => {
+    i.style.width = (idx === 0 ? pctL : pctF) + '%';
+  }); }, 80);
+
+  show('result');
+}
+$('#btn-again').addEventListener('click', function(){ beginGame(); });
+$('#btn-share-ck').addEventListener('click', shareWhatsApp);
+$('#btn-wa').addEventListener('click', shareWhatsApp);
+$('#btn-tw').addEventListener('click', shareTwitter);
+
+/* ---------- 12 · CONFETE ------------------------------------------------ */
+function confetti(winner){
+  const box = $('#confetti');
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches){ box.innerHTML = ''; return; }
+  const colors = ['var(--gold)','var(--lula)','var(--flavio)','var(--blue)','#ffffff','var(--purple)'];
+  let html = '';
+  for (let i = 0; i < 46; i++){
+    const left = (Math.random()*100).toFixed(2);
+    const dur  = (2.2 + Math.random()*2.6).toFixed(2);
+    const del  = (Math.random()*2.4).toFixed(2);
+    const c    = colors[Math.floor(Math.random()*colors.length)];
+    const w    = Math.random() < .4 ? 6 : 8;
+    html += '<i style="left:'+left+'%;background:'+c+';width:'+w+'px;height:'+w+'px;animation-duration:'+dur+'s;animation-delay:'+del+'s"></i>';
+  }
+  box.innerHTML = html;
+}
+
+/* ---------- 13 · COMPARTILHAMENTO --------------------------------------- */
+function shareText(){
+  const r = S.lastResult;
+  if (!r) return 'Joguei Lula ou Flavio! Descubra o seu resultado: ' + GAME_URL;
+  if (r.winner === 'tie') return '🎮 Joguei Lula ou Flavio!\n📊 Resultado: ' + r.pctLula + '% Lula, ' + r.pctFlavio + '% Flavio — afinidade equilibrada!\n🗳️ Descubra qual candidato pensa mais como você:\n' + GAME_URL;
+  const w = r.winner === 'lula' ? 'Lula' : 'Flavio';
+  const wp = r.winner === 'lula' ? r.pctLula : r.pctFlavio;
+  const lp = r.winner === 'lula' ? r.pctFlavio : r.pctLula;
+  const l = r.winner === 'lula' ? 'Flavio' : 'Lula';
+  return '🎮 Joguei Lula ou Flavio!\n📊 Meu resultado: ' + wp + '% ' + w + ', ' + lp + '% ' + l + '\n🗳️ Descubra qual candidato pensa mais como você:\n' + GAME_URL;
+}
+function shareWhatsApp(){ window.open('https://wa.me/?text=' + encodeURIComponent(shareText()), '_blank', 'noopener'); }
+function shareTwitter(){  window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent(shareText()), '_blank', 'noopener'); }
+
+/* ---------- 14 · RANKING (localStorage no lugar do Firebase) ------------ */
+function loadRanking(){
+  try {
+    const raw = localStorage.getItem(LS_RANK);
+    const arr = raw ? JSON.parse(raw) : [];
+    return Array.isArray(arr) ? arr : [];
+  } catch(e){ return []; }
+}
+function saveRanking(entry){
+  try {
+    const arr = loadRanking();
+    arr.push(entry);
+    arr.sort((a,b) => b.pct - a.pct || new Date(b.ts) - new Date(a.ts));
+    localStorage.setItem(LS_RANK, JSON.stringify(arr.slice(0, 200)));
+  } catch(e){ /* quota / modo privado — o protótipo degrada em silêncio */ }
+}
+function seedRankingIfEmpty(){
+  if (loadRanking().length) return;
+  const seed = [
+    ['Ana Paula', 100, 10, 'lula'],   ['Carlos Mendes', 90, 10, 'flavio'],
+    ['Juliana R.', 80, 30, 'lula'],   ['Roberto Lima', 70, 20, 'flavio'],
+    ['Fernanda S.', 70, 30, 'lula'],  ['Marcos Vinícius', 60, 20, 'flavio'],
+    ['Patrícia Gomes', 60, 10, 'lula'],['Diego Alves', 50, 40, 'flavio'],
+    ['Letícia Souza', 50, 20, 'lula']
+  ];
+  const arr = seed.map((s, i) => ({
+    name: s[0], pct: s[1], total: s[2], winner: s[3],
+    lula: s[3] === 'lula' ? Math.round(s[1]*s[2]/100) : Math.round((100-s[1])*s[2]/100),
+    flavio: s[3] === 'flavio' ? Math.round(s[1]*s[2]/100) : Math.round((100-s[1])*s[2]/100),
+    ts: new Date(Date.now() - (i+1)*3600*1000).toISOString()
+  }));
+  try { localStorage.setItem(LS_RANK, JSON.stringify(arr)); } catch(e){}
+}
+
+function rankRows(list){
+  if (!list.length) return '<p class="rk-empty">Ninguém no ranking ainda. Seja o primeiro!</p>';
+  return list.map(function(r, i){
+    const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : '';
+    const wClass = r.winner === 'lula' ? 'l' : r.winner === 'flavio' ? 'f' : '';
+    const wName = r.winner === 'lula' ? 'LULA' : r.winner === 'flavio' ? 'FLAVIO' : 'EMPATE';
+    const date = new Date(r.ts);
+    const ds = String(date.getDate()).padStart(2,'0') + '/' + String(date.getMonth()+1).padStart(2,'0') + '/' + date.getFullYear();
+    const me = (S.name && r.name === S.name) ? ' me' : '';
+    return '<div class="rk-row top'+(i+1)+me+'">' +
+      '<span class="pos">'+(medal || ('#'+(i+1)))+'</span>' +
+      '<span class="nm">'+esc(r.name)+' <span style="color:var(--muted-text);font-size:.85em">· '+r.total+' pergs · '+ds+'</span></span>' +
+      '<span class="vl '+wClass+'">'+r.pct+'%</span>' +
+    '</div>';
+  }).join('');
+}
+function esc(s){ return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+function renderRanking(){
+  const all = loadRanking();
+  const list = S.rankTab === 'all' ? all : all.filter(r => r.winner === S.rankTab);
+  $('#gr-list').innerHTML = rankRows(list.slice(0, 40));
+  $('#gr-players').textContent = all.length;
+  $('#gr-games').textContent = all.length;
+}
+$$('.tab').forEach(function(t){
+  t.addEventListener('click', function(){
+    $$('.tab').forEach(x => x.classList.remove('on'));
+    t.classList.add('on');
+    S.rankTab = t.getAttribute('data-tab');
+    renderRanking();
+  });
+});
+$('#btn-back').addEventListener('click', function(){
+  show(S.answers.length && S.lastResult ? 'result' : 'title');
+});
+
+/* ---------- 15 · MUTE --------------------------------------------------- */
+function paintMute(){ $('#btn-mute').textContent = S.muted ? '🔇' : '🔊'; }
+$('#btn-mute').addEventListener('click', function(){
+  S.muted = !S.muted;
+  localStorage.setItem(LS_MUTE, S.muted ? '1' : '0');
+  paintMute();
+  if (!S.muted){ Audio_.unlock(); Audio_.hover(); }
+});
+paintMute();
+
+/* beeps sutis de hover nos botões de arcade */
+$$('.btn, .answer').forEach(function(b){
+  b.addEventListener('mouseenter', function(){ if (b.disabled) return; Audio_.hover(); });
+});
+
+/* ---------- 16 · BOOT --------------------------------------------------- */
+seedRankingIfEmpty();
+refreshStart();
+deckBg('title');
+window.addEventListener('orientationchange', function(){ setTimeout(() => window.scrollTo(0,0), 200); });
+
+})();
+</script>
+</body>
+</html>
