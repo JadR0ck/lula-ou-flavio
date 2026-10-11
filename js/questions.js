@@ -65,7 +65,7 @@ const QUESTIONS = [
   { id: 33, category: 'Economia & Tributos', candidate: 'lula',   text: 'Manter e fortalecer a CLT (carteira de trabalho assinada) e os direitos trabalhistas?', source: 'Diretrizes econômicas' },
   { id: 34, category: 'Economia & Tributos', candidate: 'lula',   text: 'Manter o salário mínimo com reajuste acima da inflação?', source: 'Diretrizes econômicas' },
   { id: 35, category: 'Economia & Tributos', candidate: 'lula',   text: 'Fortalecer os sindicatos e a negociação coletiva dos trabalhadores?', source: 'Diretrizes econômicas' },
-  { id: 36, category: 'Economia & Tributos', candidate: 'lula',   text: 'Manter o equilíbrio fiscal sem cortar os investimentos sociais?', source: 'Diretrizes econômicas' },
+  { id: 36, category: 'Economia & Tributos', candidate: 'lula',   text: 'Manter as contas do governo em dia (gastar só o que arrecada) sem cortar os investimentos em saúde, educação e programas sociais?', source: 'Diretrizes econômicas' },
   { id: 37, category: 'Economia & Tributos', candidate: 'lula',   text: 'Manter e ampliar programas de transferência de renda como o Bolsa Família?', source: 'Diretrizes econômicas' },
   { id: 38, category: 'Economia & Tributos', candidate: 'flavio', text: 'Reduzir os impostos sobre o consumo para baixar os preços?', source: 'Diretrizes econômicas' },
   { id: 39, category: 'Economia & Tributos', candidate: 'flavio', text: 'Simplificar a conta de luz, eliminando taxas e encargos ocultos?', source: 'Diretrizes econômicas' },
@@ -153,7 +153,8 @@ const QUESTIONS = [
   { id: 97, category: 'Instituições & Democracia', candidate: 'flavio', text: 'Acabar com a reeleição para presidente, governador e prefeito?', source: 'Diretrizes institucionais' },
   { id: 98, category: 'Instituições & Democracia', candidate: 'flavio', text: 'Limitar as decisões individuais de ministros do Supremo Tribunal Federal?', source: 'Diretrizes institucionais' },
   { id: 99, category: 'Instituições & Democracia', candidate: 'flavio', text: 'Garantir ampla liberdade de expressão, sem censura nas redes sociais?', source: 'Diretrizes institucionais' },
-  { id: 100, category: 'Instituições & Democracia', candidate: 'flavio', text: 'Reduzir o número de ministérios do governo federal?', source: 'Diretrizes institucionais' }
+  { id: 100, category: 'Instituições & Democracia', candidate: 'flavio', text: 'Reduzir o número de ministérios do governo federal?', source: 'Diretrizes institucionais' },
+  { id: 101, category: 'Polêmicas da Eleição', candidate: 'lula', text: 'Proibir as apostas online, as chamadas "bets" (casas de apostas esportivas pela internet)?', source: 'Tema de campanha — fora dos planos de governo', featured: true }
 ];
 
 /* Validação simples no console (opcional): conta o balanceamento */
