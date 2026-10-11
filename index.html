@@ -571,6 +571,38 @@ button{ font-family:inherit; cursor:pointer; border:0; background:none; color:in
 }
 .tab.on{ background: var(--gold); color:#1a1a2e; border-color:#fff; }
 
+/* tela do tema coringa */
+.joker-grid{
+  display:grid; grid-template-columns:1fr 1fr; gap:.5em;
+  max-height:58vh; overflow-y:auto; padding-right:2px;
+}
+.joker-btn{
+  min-height:52px;
+  padding:.6em .4em;
+  font-family: var(--f-pixel); font-size: var(--ui-sm); letter-spacing:.04em; line-height:1.25;
+  background:#2a3050; color:var(--ink);
+  border:var(--step) solid rgba(255,255,255,.35);
+  cursor:pointer;
+}
+.joker-btn:hover{ filter:brightness(1.15); }
+.joker-btn:active{ transform:translateY(2px); }
+.joker-badge{
+  display:inline-block; vertical-align:middle;
+  margin-left:.4em; padding:.15em .4em;
+  font-family:var(--f-pixel); font-size:.7em; letter-spacing:.05em;
+  background:var(--gold); color:#1a1a2e; border:2px solid #fff;
+}
+/* destaque da pergunta coringa no quiz */
+.q-joker{ display:none; }
+.q-joker.show{
+  display:inline-block;
+  margin:0 auto; padding:.3em .6em;
+  font-family:var(--f-pixel); font-size:var(--ui-sm); letter-spacing:.05em;
+  background:var(--gold); color:#1a1a2e; border:var(--step) solid #fff;
+  text-align:center;
+}
+
+
 .stats-grid{
   display:grid; grid-template-columns:1fr 1fr; gap:.5em;
   font-size: clamp(16px,3.6vw,19px); text-align:center;
@@ -727,6 +759,18 @@ button{ font-family:inherit; cursor:pointer; border:0; background:none; color:in
       </section>
 
       <!-- ============================================================
+           2.5 · TEMA CORINGA
+           ============================================================ -->
+      <section class="screen" id="scr-tema" data-screen-label="Tema Coringa">
+        <div class="sheet" style="justify-content:flex-start;padding-top:.4em">
+          <h2>⭐ Tema coringa</h2>
+          <p class="sub">Escolha o tema mais importante para você. As perguntas desse tema valem o <b style="color:var(--gold)">dobro</b> no resultado!</p>
+          <div class="joker-grid" id="joker-grid"></div>
+          <button class="btn btn--ghost btn--wide" id="btn-skip-tema">Pular (não escolher tema)</button>
+        </div>
+      </section>
+
+      <!-- ============================================================
            3 · QUIZ
            ============================================================ -->
       <section class="screen" id="scr-quiz" data-screen-label="03 Quiz">
@@ -738,6 +782,7 @@ button{ font-family:inherit; cursor:pointer; border:0; background:none; color:in
 
         <div class="q-zone">
           <div class="dialog q-box" id="q-box">
+            <div class="q-joker" id="q-joker">⭐ TEMA CORINGA — vale o dobro!</div>
             <div class="q-cat" id="q-cat">SEGURANÇA PÚBLICA</div>
             <p class="q-text" id="q-text">—</p>
           </div>
@@ -1154,7 +1199,7 @@ const PLANS = {
   lula:   'https://www.tse.jus.br/eleicoes/eleicoes-2026-content/propostas-de-governo-dos-candidatos-ao-cargo-de-presidente-da-republica-eleicoes-2026/lula-propostas-de-governo',
   flavio: 'https://www.tse.jus.br/eleicoes/eleicoes-2026-content/propostas-de-governo-dos-candidatos-ao-cargo-de-presidente-da-republica-eleicoes-2026/flavio-bolsonaro'
 };
-const GAME_URL = 'https://github.com/JadR0ck/lula-ou-flavio';
+const GAME_URL = 'https://lulaouflavio.fun';
 const LS_MUTE = 'lof.muted';
 const MIN_INTERVAL = 1500;   // ms entre respostas (spec §5.4, anti-bot)
 /* tempo que o reveal fica na tela antes de pular para a próxima pergunta.
@@ -1179,12 +1224,16 @@ const S = {
   muted: localStorage.getItem(LS_MUTE) === '1',
   lastResult: null,
   rankTab: 'all',
-  ckShown: false    // checkpoint da rodada atual já foi exibido?
+  ckShown: false,   // checkpoint da rodada atual já foi exibido?
+  joker: null       // tema coringa escolhido (as perguntas desse tema valem o dobro)
 };
 
 const score = () => {
   let l = 0, f = 0;
-  S.answers.forEach(a => a.pointsTo === 'lula' ? l++ : f++);
+  S.answers.forEach(a => {
+    const w = a.weight || 1;
+    if (a.pointsTo === 'lula') l += w; else f += w;
+  });
   return { l, f, total: S.answers.length };
 };
 
@@ -1192,7 +1241,7 @@ const score = () => {
 const $  = s => document.querySelector(s);
 const $$ = s => Array.prototype.slice.call(document.querySelectorAll(s));
 const screens = {};
-['title','registro','quiz','check','result','ranking'].forEach(k => screens[k] = document.getElementById('scr-'+k));
+['title','registro','tema','quiz','check','result','ranking'].forEach(k => screens[k] = document.getElementById('scr-'+k));
 
 function show(name){
   Object.keys(screens).forEach(k => {
@@ -1320,6 +1369,40 @@ btnStart.addEventListener('click', function(){
   Audio_.unlock();
   S.name = inpName.value.trim();
   S.consent = inpConsent.checked;
+  show('tema');
+});
+
+/* ---------- 8.5 · TEMA CORINGA ------------------------------------------- */
+const CATEGORIES = [
+  ['Segurança Pública', '🔒 Segurança Pública'],
+  ['Educação', '📚 Educação'],
+  ['Saúde', '🏥 Saúde'],
+  ['Economia & Tributos', '💰 Economia e Impostos'],
+  ['Meio Ambiente & Energia', '🌳 Meio Ambiente'],
+  ['Direitos Sociais', '🤝 Direitos Sociais'],
+  ['Soberania & Relações Internacionais', '🌎 Relações Internacionais'],
+  ['Infraestrutura & Tecnologia', '🏗️ Infraestrutura e Tecnologia'],
+  ['Cultura, Esporte & Lazer', '🎭 Cultura e Esporte'],
+  ['Instituições & Democracia', '🏛️ Democracia e Instituições'],
+  ['Polêmicas da Eleição', '🔥 Temas Polêmicos']
+];
+
+function buildJokerGrid(){
+  const grid = $('#joker-grid');
+  grid.innerHTML = CATEGORIES.map(function(c){
+    return '<button class="joker-btn" data-cat="' + esc(c[0]) + '">' + esc(c[1]) + '</button>';
+  }).join('');
+  grid.querySelectorAll('.joker-btn').forEach(function(b){
+    b.addEventListener('click', function(){
+      S.joker = b.getAttribute('data-cat');
+      Audio_.unlock();
+      beginGame();
+    });
+  });
+}
+$('#btn-skip-tema').addEventListener('click', function(){
+  S.joker = null;
+  Audio_.unlock();
   beginGame();
 });
 
@@ -1361,6 +1444,7 @@ function nextQuestion(){
 
   $('#q-cat').textContent = q.category.toUpperCase();
   $('#q-text').textContent = q.text;
+  $('#q-joker').classList.toggle('show', !!(S.joker && q.category === S.joker));
   const n = S.answers.length + 1;
   const total = Math.max(10, Math.ceil(n/10)*10);
   $('#q-count').textContent = n + '/' + total;
@@ -1422,7 +1506,8 @@ function answer(said){
   /* "sim" concorda com a posição descrita → ponto para quem a defende.
      "não" discorda → ponto para o adversário. */
   const pointsTo = (said === 'sim') ? q.candidate : (q.candidate === 'lula' ? 'flavio' : 'lula');
-  S.answers.push({ id:q.id, category:q.category, candidate:q.candidate, said:said, pointsTo:pointsTo });
+  const weight = (S.joker && q.category === S.joker) ? 2 : 1;
+  S.answers.push({ id:q.id, category:q.category, candidate:q.candidate, said:said, pointsTo:pointsTo, weight:weight });
 
   Audio_.urna();
   flash(pointsTo);
@@ -1697,6 +1782,7 @@ $$('.btn, .answer').forEach(function(b){
 });
 
 /* ---------- 16 · BOOT --------------------------------------------------- */
+buildJokerGrid();
 refreshStart();
 deckBg('title');
 window.addEventListener('orientationchange', function(){ setTimeout(() => window.scrollTo(0,0), 200); });
