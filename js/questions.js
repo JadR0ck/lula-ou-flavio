@@ -155,7 +155,8 @@ const QUESTIONS = [
   { id: 99, category: 'Instituições & Democracia', candidate: 'flavio', text: 'Garantir ampla liberdade de expressão, sem censura nas redes sociais?', source: 'Diretrizes institucionais' },
   { id: 100, category: 'Instituições & Democracia', candidate: 'flavio', text: 'Reduzir o número de ministérios do governo federal?', source: 'Diretrizes institucionais' },
   { id: 101, category: 'Polêmicas da Eleição', candidate: 'lula', text: 'Proibir as apostas online, as chamadas "bets" (casas de apostas esportivas pela internet)?', source: 'Tema de campanha — fora dos planos de governo', featured: true },
-  { id: 102, category: 'Polêmicas da Eleição', candidate: 'lula', text: 'Manter e ampliar o programa Farmácia Popular (distribuição gratuita de medicamentos para doenças como diabetes e pressão alta)?', source: 'Tema de campanha — fora dos planos de governo', featured: true }
+  { id: 102, category: 'Polêmicas da Eleição', candidate: 'lula', text: 'Manter e ampliar o programa Farmácia Popular (distribuição gratuita de medicamentos para doenças como diabetes e pressão alta)?', source: 'Tema de campanha — fora dos planos de governo', featured: true },
+  { id: 103, category: 'Polêmicas da Eleição', candidate: 'lula', text: 'Acabar com a escala 6x1 (trabalhar 6 dias e folgar 1) e criar a escala 5x2 (trabalhar 5 dias e folgar 2, sem reduzir o salário)?', source: 'Tema de campanha — fora dos planos de governo', featured: true }
 ];
 
 /* Validação simples no console (opcional): conta o balanceamento */
