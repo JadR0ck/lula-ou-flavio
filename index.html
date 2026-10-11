@@ -1014,7 +1014,7 @@ const QUESTIONS = [
   { id: 5,  category: 'Segurança Pública', candidate: 'lula',   text: 'Criar programas de prevenção à violência e de inclusão social em territórios vulneráveis?', source: 'Diretrizes de segurança pública' },
   { id: 6,  category: 'Segurança Pública', candidate: 'flavio', text: 'Reduzir a maioridade penal de 18 para 16 anos?', source: 'Diretrizes de segurança pública' },
   { id: 7,  category: 'Segurança Pública', candidate: 'flavio', text: 'Construir mais presídios e restringir a progressão de pena para crimes violentos?', source: 'Diretrizes de segurança pública' },
-  { id: 8,  category: 'Segurança Pública', candidate: 'flavio', text: 'Ampliar o porte de armas para a população civil?', source: 'Diretrizes de segurança pública' },
+  { id: 8,  category: 'Segurança Pública', candidate: 'flavio', text: 'Ampliar o porte de armas para a população civil?', source: 'Diretrizes de segurança pública' , featured: true },
   { id: 9,  category: 'Segurança Pública', candidate: 'flavio', text: 'Criar tropas de elite nas fronteiras para combater o narcotráfico?', source: 'Diretrizes de segurança pública' },
   { id: 10, category: 'Segurança Pública', candidate: 'flavio', text: 'Responsabilizar adolescentes que cometem crimes graves como adultos?', source: 'Diretrizes de segurança pública' },
 
@@ -1035,14 +1035,14 @@ const QUESTIONS = [
   /* ========================================================================
      3 · SAÚDE — 10 perguntas (5 Lula + 5 Flávio)
      ======================================================================== */
-  { id: 21, category: 'Saúde', candidate: 'lula',   text: 'Fortalecer o SUS como sistema único, universal e gratuito?', source: 'Diretrizes de saúde' },
+  { id: 21, category: 'Saúde', candidate: 'lula',   text: 'Fortalecer o SUS (Sistema Único de Saúde, o atendimento público de saúde do Brasil)?', source: 'Diretrizes de saúde' },
   { id: 22, category: 'Saúde', candidate: 'lula',   text: 'Aumentar o financiamento federal da saúde pública?', source: 'Diretrizes de saúde' },
   { id: 23, category: 'Saúde', candidate: 'lula',   text: 'Ampliar a produção nacional de vacinas e medicamentos?', source: 'Diretrizes de saúde' },
-  { id: 24, category: 'Saúde', candidate: 'lula',   text: 'Garantir atendimento odontológico e de saúde mental pelo SUS?', source: 'Diretrizes de saúde' },
+  { id: 24, category: 'Saúde', candidate: 'lula',   text: 'Garantir atendimento odontológico e de saúde mental pelo SUS (Sistema Único de Saúde)?', source: 'Diretrizes de saúde' },
   { id: 25, category: 'Saúde', candidate: 'lula',   text: 'Ampliar a atenção básica e o atendimento de saúde nas comunidades?', source: 'Diretrizes de saúde' },
   { id: 26, category: 'Saúde', candidate: 'flavio', text: 'Criar um prontuário eletrônico único nacional (histórico de saúde do paciente acessível em qualquer hospital do país)?', source: 'Diretrizes de saúde' },
   { id: 27, category: 'Saúde', candidate: 'flavio', text: 'Usar inteligência artificial no atendimento da saúde pública?', source: 'Diretrizes de saúde' },
-  { id: 28, category: 'Saúde', candidate: 'flavio', text: 'Digitalizar e zerar as filas do INSS com tecnologia?', source: 'Diretrizes de saúde' },
+  { id: 28, category: 'Saúde', candidate: 'flavio', text: 'Digitalizar e zerar as filas do INSS (órgão que paga aposentadorias e benefícios) com tecnologia?', source: 'Diretrizes de saúde' },
   { id: 29, category: 'Saúde', candidate: 'flavio', text: 'Priorizar a saúde preventiva em vez do tratamento curativo?', source: 'Diretrizes de saúde' },
   { id: 30, category: 'Saúde', candidate: 'flavio', text: 'Criar programas de atendimento domiciliar para idosos dependentes?', source: 'Diretrizes de saúde' },
 
@@ -1055,7 +1055,7 @@ const QUESTIONS = [
   { id: 34, category: 'Economia & Tributos', candidate: 'lula',   text: 'Manter o salário mínimo com reajuste acima da inflação?', source: 'Diretrizes econômicas' },
   { id: 35, category: 'Economia & Tributos', candidate: 'lula',   text: 'Fortalecer os sindicatos e a negociação coletiva dos trabalhadores?', source: 'Diretrizes econômicas' },
   { id: 36, category: 'Economia & Tributos', candidate: 'lula',   text: 'Manter as contas do governo em dia (gastar só o que arrecada) sem cortar os investimentos em saúde, educação e programas sociais?', source: 'Diretrizes econômicas' },
-  { id: 37, category: 'Economia & Tributos', candidate: 'lula',   text: 'Manter e ampliar programas de transferência de renda como o Bolsa Família?', source: 'Diretrizes econômicas' },
+  { id: 37, category: 'Economia & Tributos', candidate: 'lula',   text: 'Manter e ampliar programas de transferência de renda como o Bolsa Família?', source: 'Diretrizes econômicas' , featured: true },
   { id: 38, category: 'Economia & Tributos', candidate: 'flavio', text: 'Reduzir os impostos sobre o consumo para baixar os preços?', source: 'Diretrizes econômicas' },
   { id: 39, category: 'Economia & Tributos', candidate: 'flavio', text: 'Simplificar a conta de luz, eliminando taxas e encargos ocultos?', source: 'Diretrizes econômicas' },
   { id: 40, category: 'Economia & Tributos', candidate: 'flavio', text: 'Reduzir o custo do trabalho para as empresas contratarem mais?', source: 'Diretrizes econômicas' },
@@ -1063,12 +1063,12 @@ const QUESTIONS = [
   { id: 42, category: 'Economia & Tributos', candidate: 'flavio', text: 'Reduzir o tamanho da máquina pública com uma reforma administrativa?', source: 'Diretrizes econômicas' },
   { id: 43, category: 'Economia & Tributos', candidate: 'flavio', text: 'Zerar o déficit público para reduzir juros e inflação?', source: 'Diretrizes econômicas' },
   { id: 44, category: 'Economia & Tributos', candidate: 'flavio', text: 'Facilitar o crédito para pequenos empreendedores com juros menores?', source: 'Diretrizes econômicas' },
-  { id: 45, category: 'Economia & Tributos', candidate: 'flavio', text: 'Combater fraudes no INSS e nos auxílios sociais com auditoria rigorosa?', source: 'Diretrizes econômicas' },
+  { id: 45, category: 'Economia & Tributos', candidate: 'flavio', text: 'Combater fraudes no INSS (órgão que paga aposentadorias) e nos auxílios sociais com auditoria rigorosa?', source: 'Diretrizes econômicas' },
 
   /* ========================================================================
      5 · MEIO AMBIENTE & ENERGIA — 10 perguntas (5 Lula + 5 Flávio)
      ======================================================================== */
-  { id: 46, category: 'Meio Ambiente & Energia', candidate: 'lula',   text: 'Combater o desmatamento ilegal na Amazônia com fiscalização reforçada?', source: 'Diretrizes ambientais' },
+  { id: 46, category: 'Meio Ambiente & Energia', candidate: 'lula',   text: 'Combater o desmatamento ilegal na Amazônia com fiscalização reforçada?', source: 'Diretrizes ambientais' , featured: true },
   { id: 47, category: 'Meio Ambiente & Energia', candidate: 'lula',   text: 'Expandir as energias solar e eólica no país?', source: 'Diretrizes ambientais' },
   { id: 48, category: 'Meio Ambiente & Energia', candidate: 'lula',   text: 'Fortalecer a agricultura familiar e a agroecologia?', source: 'Diretrizes ambientais' },
   { id: 49, category: 'Meio Ambiente & Energia', candidate: 'lula',   text: 'Proteger terras indígenas e quilombolas contra invasões e garimpo ilegal?', source: 'Diretrizes ambientais' },
@@ -1083,10 +1083,10 @@ const QUESTIONS = [
      6 · DIREITOS SOCIAIS — 10 perguntas (5 Lula + 5 Flávio)
      ======================================================================== */
   { id: 56, category: 'Direitos Sociais', candidate: 'lula',   text: 'Ampliar as cotas raciais e sociais nas universidades públicas?', source: 'Diretrizes sociais' },
-  { id: 57, category: 'Direitos Sociais', candidate: 'lula',   text: 'Criar políticas públicas específicas para a população LGBTQIA+?', source: 'Diretrizes sociais' },
+  { id: 57, category: 'Direitos Sociais', candidate: 'lula',   text: 'Criar políticas públicas específicas para a população LGBTQIA+ (lésbicas, gays, bissexuais, trans e outras minorias)?', source: 'Diretrizes sociais' , featured: true },
   { id: 58, category: 'Direitos Sociais', candidate: 'lula',   text: 'Fortalecer a igualdade salarial entre homens e mulheres?', source: 'Diretrizes sociais' },
-  { id: 59, category: 'Direitos Sociais', candidate: 'lula',   text: 'Ampliar o acesso à moradia popular e à regularização fundiária?', source: 'Diretrizes sociais' },
-  { id: 60, category: 'Direitos Sociais', candidate: 'lula',   text: 'Criar um plano nacional de enfrentamento à fome e à pobreza extrema?', source: 'Diretrizes sociais' },
+  { id: 59, category: 'Direitos Sociais', candidate: 'lula',   text: 'Ampliar o acesso à moradia popular e à regularização fundiária?', source: 'Diretrizes sociais' , featured: true },
+  { id: 60, category: 'Direitos Sociais', candidate: 'lula',   text: 'Criar um plano nacional de enfrentamento à fome e à pobreza extrema?', source: 'Diretrizes sociais' , featured: true },
   { id: 61, category: 'Direitos Sociais', candidate: 'flavio', text: 'Criar uma central de atendimento com aplicativo de denúncia para proteger mulheres?', source: 'Diretrizes sociais' },
   { id: 62, category: 'Direitos Sociais', candidate: 'flavio', text: 'Adotar tolerância zero para o feminicídio, com penas mais rigorosas?', source: 'Diretrizes sociais' },
   { id: 63, category: 'Direitos Sociais', candidate: 'flavio', text: 'Oferecer bônus de internet para mulheres vítimas de violência doméstica?', source: 'Diretrizes sociais' },
@@ -1099,7 +1099,7 @@ const QUESTIONS = [
   { id: 66, category: 'Soberania & Relações Internacionais', candidate: 'lula',   text: 'Fortalecer o BRICS (grupo de países emergentes, como China e Rússia)?', source: 'Diretrizes de política externa' },
   { id: 67, category: 'Soberania & Relações Internacionais', candidate: 'lula',   text: 'Manter uma política externa independente, sem alinhamento automático aos EUA?', source: 'Diretrizes de política externa' },
   { id: 68, category: 'Soberania & Relações Internacionais', candidate: 'lula',   text: 'Investir em cooperação técnica com países da África e da América Latina?', source: 'Diretrizes de política externa' },
-  { id: 69, category: 'Soberania & Relações Internacionais', candidate: 'lula',   text: 'Defender o multilateralismo e o fortalecimento da ONU?', source: 'Diretrizes de política externa' },
+  { id: 69, category: 'Soberania & Relações Internacionais', candidate: 'lula',   text: 'Defender o multilateralismo e o fortalecimento da ONU (Organização das Nações Unidas)?', source: 'Diretrizes de política externa' },
   { id: 70, category: 'Soberania & Relações Internacionais', candidate: 'lula',   text: 'Manter relações comerciais e diplomáticas com a China e a Rússia?', source: 'Diretrizes de política externa' },
   { id: 71, category: 'Soberania & Relações Internacionais', candidate: 'flavio', text: 'Aproximar o Brasil dos Estados Unidos e de alianças ocidentais?', source: 'Diretrizes de política externa' },
   { id: 72, category: 'Soberania & Relações Internacionais', candidate: 'lula', text: 'Priorizar acordos comerciais que protejam a indústria nacional?', source: 'Diretrizes de política externa' },
@@ -1143,7 +1143,8 @@ const QUESTIONS = [
   { id: 98, category: 'Instituições & Democracia', candidate: 'flavio', text: 'Limitar as decisões individuais de ministros do Supremo Tribunal Federal?', source: 'Diretrizes institucionais' },
   { id: 99, category: 'Instituições & Democracia', candidate: 'flavio', text: 'Garantir ampla liberdade de expressão, sem censura nas redes sociais?', source: 'Diretrizes institucionais' },
   { id: 100, category: 'Instituições & Democracia', candidate: 'flavio', text: 'Reduzir o número de ministérios do governo federal?', source: 'Diretrizes institucionais' },
-  { id: 101, category: 'Polêmicas da Eleição', candidate: 'lula', text: 'Proibir as apostas online, as chamadas "bets" (casas de apostas esportivas pela internet)?', source: 'Tema de campanha — fora dos planos de governo', featured: true }
+  { id: 101, category: 'Polêmicas da Eleição', candidate: 'lula', text: 'Proibir as apostas online, as chamadas "bets" (casas de apostas esportivas pela internet)?', source: 'Tema de campanha — fora dos planos de governo', featured: true },
+  { id: 102, category: 'Polêmicas da Eleição', candidate: 'lula', text: 'Manter e ampliar o programa Farmácia Popular (distribuição gratuita de medicamentos para doenças como diabetes e pressão alta)?', source: 'Tema de campanha — fora dos planos de governo', featured: true }
 
 ];
 
