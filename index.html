@@ -4,11 +4,19 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>Lula ou Flavio — Quiz Eleitoral Pixel</title>
-<meta name="description" content="Descubra qual candidato à presidência pensa mais como você! Jogo educativo com propostas reais dos planos de governo." />
-<meta property="og:title" content="Lula ou Flavio — Quiz Eleitoral Pixel" />
-<meta property="og:description" content="Descubra qual candidato à presidência pensa mais como você! Jogo educativo com propostas reais dos planos de governo." />
+<title>Lula ou Flavio — Descubra qual candidato combina com você</title>
+<meta name="description" content="Jogue e descubra qual candidato à presidência pensa mais como você! Jogo educativo com propostas reais dos planos de governo." />
+<meta property="og:title" content="Lula ou Flavio — Descubra qual candidato combina com você" />
+<meta property="og:description" content="Jogue e descubra qual candidato à presidência pensa mais como você!" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://lulaouflavio.fun" />
+<meta property="og:image" content="https://lulaouflavio.fun/assets/og-image.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
 <meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Lula ou Flavio — Descubra qual candidato combina com você" />
+<meta name="twitter:description" content="Jogue e descubra qual candidato à presidência pensa mais como você!" />
+<meta name="twitter:image" content="https://lulaouflavio.fun/assets/og-image.png" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
@@ -1702,16 +1710,16 @@ function confetti(winner){
 /* ---------- 13 · COMPARTILHAMENTO --------------------------------------- */
 function shareText(){
   const r = S.lastResult;
-  if (!r) return 'Joguei Lula ou Flavio! Descubra o seu resultado: ' + GAME_URL;
-  if (r.winner === 'tie') return '🎮 Joguei Lula ou Flavio!\n📊 Resultado: ' + r.pctLula + '% Lula, ' + r.pctFlavio + '% Flavio — afinidade equilibrada!\n🗳️ Descubra qual candidato pensa mais como você:\n' + GAME_URL;
+  if (!r) return 'Joguei *Lula ou Flavio*! Descubra o seu resultado: ' + GAME_URL;
+  if (r.winner === 'tie') return '🎮 Joguei *Lula ou Flavio*!\n📊 Resultado: ' + r.pctLula + '% Lula, ' + r.pctFlavio + '% Flavio — afinidade equilibrada!\n🗳️ Descubra qual candidato pensa mais como você:\n' + GAME_URL;
   const w = r.winner === 'lula' ? 'Lula' : 'Flavio';
   const wp = r.winner === 'lula' ? r.pctLula : r.pctFlavio;
   const lp = r.winner === 'lula' ? r.pctFlavio : r.pctLula;
   const l = r.winner === 'lula' ? 'Flavio' : 'Lula';
-  return '🎮 Joguei Lula ou Flavio!\n📊 Meu resultado: ' + wp + '% ' + w + ', ' + lp + '% ' + l + '\n🗳️ Descubra qual candidato pensa mais como você:\n' + GAME_URL;
+  return '🎮 Joguei *Lula ou Flavio*!\n📊 Meu resultado: ' + wp + '% ' + w + ', ' + lp + '% ' + l + '\n🗳️ Descubra qual candidato pensa mais como você:\n' + GAME_URL;
 }
 function shareWhatsApp(){ window.open('https://wa.me/?text=' + encodeURIComponent(shareText()), '_blank', 'noopener'); }
-function shareTwitter(){  window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent(shareText()), '_blank', 'noopener'); }
+function shareTwitter(){  window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent(shareText().replace(/\*/g, '')), '_blank', 'noopener'); }
 
 /* ---------- 14 · RANKING (Firebase via js/firebase.js) --------------------
    As funções globais loadRanking(limit), saveRanking(entry), getStats() e
