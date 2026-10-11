@@ -50,7 +50,7 @@
   --step: 3px;                 /* unidade de pixel que alinha tudo */
   --ui: clamp(9px, 2.5vw, 11px);   /* corpo em Press Start */
   --ui-sm: clamp(7px, 1.9vw, 8.5px);
-  --q-text: clamp(17px, 4.6vw, 26px);
+  --q-text: clamp(22px, 6vw, 34px);
 }
 
 *{ box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
@@ -440,7 +440,7 @@ button{ font-family:inherit; cursor:pointer; border:0; background:none; color:in
 }
 .q-text{
   font-size: var(--q-text);
-  line-height:1.18;
+  line-height:1.32;
   text-align:center;
   color:#fff;
   margin:0;
@@ -842,6 +842,11 @@ button{ font-family:inherit; cursor:pointer; border:0; background:none; color:in
             <button class="tab" data-tab="flavio" role="tab">Flávio</button>
           </div>
 
+          <div class="dialog dark" style="padding:.8em">
+            <p class="label" style="text-align:center;margin:0 0 .6em;color:var(--gold)">Quem está à frente?</p>
+            <div class="scores" id="gr-lead"></div>
+          </div>
+
           <div class="dialog" style="padding:.6em">
             <div class="rk-list" id="gr-list"></div>
           </div>
@@ -967,6 +972,11 @@ button{ font-family:inherit; cursor:pointer; border:0; background:none; color:in
     </g>
   </defs>
 </svg>
+
+<!-- Firebase SDK (ranking global) -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+<script src="js/firebase.js"></script>
 
 <script>
 /* ==========================================================================
@@ -1130,7 +1140,6 @@ const PLANS = {
   flavio: 'https://www.tse.jus.br/eleicoes/eleicoes-2026-content/propostas-de-governo-dos-candidatos-ao-cargo-de-presidente-da-republica-eleicoes-2026/flavio-bolsonaro'
 };
 const GAME_URL = 'https://github.com/JadR0ck/lula-ou-flavio';
-const LS_RANK = 'lof.ranking.v1';
 const LS_MUTE = 'lof.muted';
 const MIN_INTERVAL = 1500;   // ms entre respostas (spec §5.4, anti-bot)
 /* tempo que o reveal fica na tela antes de pular para a próxima pergunta.
@@ -1154,7 +1163,8 @@ const S = {
   sawFirstQuestion: false,
   muted: localStorage.getItem(LS_MUTE) === '1',
   lastResult: null,
-  rankTab: 'all'
+  rankTab: 'all',
+  ckShown: false    // checkpoint da rodada atual já foi exibido?
 };
 
 const score = () => {
@@ -1311,6 +1321,7 @@ function beginGame(){
   S.round = 0;
   S.lastResult = null;
   S.sawFirstQuestion = false;
+  S.ckShown = false;
   nextQuestion();
   show('quiz');
 }
@@ -1321,7 +1332,7 @@ function nextQuestion(){
     finish();
     return;
   }
-  if (S.answers.length > 0 && S.answers.length % 10 === 0){
+  if (S.answers.length > 0 && S.answers.length % 10 === 0 && !S.ckShown){
     openCheckpoint();
     return;
   }
@@ -1349,6 +1360,7 @@ function nextQuestion(){
   cdEnd = 0;
   setEnabled(true);
   S.sawFirstQuestion = true;
+  S.ckShown = false;
 }
 
 /* bloqueia os botões enquanto o intervalo mínimo de resposta está aberto */
@@ -1426,6 +1438,7 @@ document.addEventListener('keydown', function(e){
 /* ---------- 10 · CHECKPOINT --------------------------------------------- */
 let ckOpenAt = 0;
 function openCheckpoint(){
+  S.ckShown = true;   // evita reabrir o checkpoint ao clicar "continuar"
   const sc = score();
   const pctL = Math.round(sc.l / sc.total * 100);
   const pctF = 100 - pctL;
@@ -1442,7 +1455,7 @@ function openCheckpoint(){
   cont.disabled = still === 0;
   cont.textContent = still === 0 ? '🔄 Banco esgotado' : '🔄 Continuar jogando (+' + Math.min(10, still) + ')';
 
-  $('#ck-rank').innerHTML = rankRows(loadRanking().slice(0, 5));
+  loadRanking(5).then(function(list){ $('#ck-rank').innerHTML = rankRows(list); });
   Audio_.checkpoint();
   show('check');
   ckOpenAt = Date.now();
@@ -1506,7 +1519,7 @@ function finish(){
   confetti(winner);
   Audio_.victory();
 
-  /* persiste no "ranking global" (localStorage) se houve consentimento */
+  /* persiste no ranking global (Firebase) se houve consentimento */
   if (S.consent && sc.total >= 10){
     saveRanking({
       name: S.name,
@@ -1514,9 +1527,12 @@ function finish(){
       pct: Math.max(pctL, pctF),
       winner: winner,
       ts: new Date().toISOString()
+    }).then(function(){
+      S.lastResult.saved = true;
+      toast('Resultado salvo no ranking global!', 1800);
+    }).catch(function(){
+      toast('Não foi possível salvar no ranking.', 1800);
     });
-    S.lastResult.saved = true;
-    toast('Resultado salvo no ranking global!', 1800);
   } else if (S.consent && sc.total < 10){
     toast('São necessárias 10+ respostas para entrar no ranking.', 2200);
   }
@@ -1563,39 +1579,10 @@ function shareText(){
 function shareWhatsApp(){ window.open('https://wa.me/?text=' + encodeURIComponent(shareText()), '_blank', 'noopener'); }
 function shareTwitter(){  window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent(shareText()), '_blank', 'noopener'); }
 
-/* ---------- 14 · RANKING (localStorage no lugar do Firebase) ------------ */
-function loadRanking(){
-  try {
-    const raw = localStorage.getItem(LS_RANK);
-    const arr = raw ? JSON.parse(raw) : [];
-    return Array.isArray(arr) ? arr : [];
-  } catch(e){ return []; }
-}
-function saveRanking(entry){
-  try {
-    const arr = loadRanking();
-    arr.push(entry);
-    arr.sort((a,b) => b.pct - a.pct || new Date(b.ts) - new Date(a.ts));
-    localStorage.setItem(LS_RANK, JSON.stringify(arr.slice(0, 200)));
-  } catch(e){ /* quota / modo privado — o protótipo degrada em silêncio */ }
-}
-function seedRankingIfEmpty(){
-  if (loadRanking().length) return;
-  const seed = [
-    ['Ana Paula', 100, 10, 'lula'],   ['Carlos Mendes', 90, 10, 'flavio'],
-    ['Juliana R.', 80, 30, 'lula'],   ['Roberto Lima', 70, 20, 'flavio'],
-    ['Fernanda S.', 70, 30, 'lula'],  ['Marcos Vinícius', 60, 20, 'flavio'],
-    ['Patrícia Gomes', 60, 10, 'lula'],['Diego Alves', 50, 40, 'flavio'],
-    ['Letícia Souza', 50, 20, 'lula']
-  ];
-  const arr = seed.map((s, i) => ({
-    name: s[0], pct: s[1], total: s[2], winner: s[3],
-    lula: s[3] === 'lula' ? Math.round(s[1]*s[2]/100) : Math.round((100-s[1])*s[2]/100),
-    flavio: s[3] === 'flavio' ? Math.round(s[1]*s[2]/100) : Math.round((100-s[1])*s[2]/100),
-    ts: new Date(Date.now() - (i+1)*3600*1000).toISOString()
-  }));
-  try { localStorage.setItem(LS_RANK, JSON.stringify(arr)); } catch(e){}
-}
+/* ---------- 14 · RANKING (Firebase via js/firebase.js) --------------------
+   As funções globais loadRanking(limit), saveRanking(entry), getStats() e
+   incrementStats() vêm do firebase.js — elas encapsulam Firebase + fallback
+   para localStorage. Todas retornam Promises. */
 
 function rankRows(list){
   if (!list.length) return '<p class="rk-empty">Ninguém no ranking ainda. Seja o primeiro!</p>';
@@ -1616,11 +1603,34 @@ function rankRows(list){
 function esc(s){ return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 
 function renderRanking(){
-  const all = loadRanking();
-  const list = S.rankTab === 'all' ? all : all.filter(r => r.winner === S.rankTab);
-  $('#gr-list').innerHTML = rankRows(list.slice(0, 40));
-  $('#gr-players').textContent = all.length;
-  $('#gr-games').textContent = all.length;
+  loadRanking(1000).then(function(all){
+    const list = S.rankTab === 'all' ? all : all.filter(r => r.winner === S.rankTab);
+    $('#gr-list').innerHTML = rankRows(list.slice(0, 40));
+    $('#gr-players').textContent = all.length;
+    $('#gr-games').textContent = all.length;
+    renderLead(all);
+  }).catch(function(){
+    $('#gr-list').innerHTML = rankRows([]);
+  });
+}
+
+/* placar agregado: quantos jogadores estão "mais Lula" vs "mais Flávio" */
+function renderLead(all){
+  let l = 0, f = 0;
+  all.forEach(function(r){
+    if (r.winner === 'lula') l++;
+    else if (r.winner === 'flavio') f++;
+  });
+  const total = l + f;
+  const pctL = total ? Math.round(l / total * 100) : 0;
+  const pctF = total ? Math.round(f / total * 100) : 0;
+  const el = $('#gr-lead');
+  if (!el) return;
+  el.innerHTML =
+    '<div class="score-row l"><span class="who">LULA</span><span class="track"><i></i></span><span class="pct">'+pctL+'%</span></div>' +
+    '<div class="score-row f"><span class="who">FLAVIO</span><span class="track"><i></i></span><span class="pct">'+pctF+'%</span></div>' +
+    '<p class="sub" style="margin:.5em 0 0">'+ l +' jogadores mais Lula · '+ f +' mais Flávio</p>';
+  setTimeout(function(){ el.querySelectorAll('i').forEach(function(i, idx){ i.style.width = (idx === 0 ? pctL : pctF) + '%'; }); }, 60);
 }
 $$('.tab').forEach(function(t){
   t.addEventListener('click', function(){
@@ -1650,7 +1660,6 @@ $$('.btn, .answer').forEach(function(b){
 });
 
 /* ---------- 16 · BOOT --------------------------------------------------- */
-seedRankingIfEmpty();
 refreshStart();
 deckBg('title');
 window.addEventListener('orientationchange', function(){ setTimeout(() => window.scrollTo(0,0), 200); });

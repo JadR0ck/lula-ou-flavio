@@ -1,48 +1,23 @@
 /* ==========================================================================
    LULA OU FLAVIO — Integração Firebase (ranking global)
-
-   COMO CONFIGURAR (5 minutos):
-   1. Acesse https://console.firebase.google.com
-   2. Clique em "Adicionar projeto" → nome: "lula-ou-flavio"
-   3. No menu lateral: "Criação" (Build) → "Realtime Database" → "Criar banco"
-      - Local: qualquer (recomendo us-central1)
-      - Modo: "Iniciar no modo de teste" (ajustamos as regras abaixo)
-   4. Em "Visão geral do projeto" → "Adicionar app" → ícone "</>" (Web)
-   5. Copie as credenciais e cole no objeto FIREBASE_CONFIG abaixo
-   6. Cole a URL do banco em "databaseURL" (ex: https://SEU-PROJETO-default-rtdb.firebaseio.com)
-
-   REGRAS DE SEGURANÇA (aba "Regras" do Realtime Database):
-   {
-     "rules": {
-       "ranking": {
-         ".read": true,
-         ".write": true
-       },
-       "stats": {
-         ".read": true,
-         ".write": true
-       }
-     }
-   }
-   (Para um jogo aberto como este, leitura e escrita públicas são suficientes.
-    Se quiser mais controle, troque ".write": true por validações específicas.)
+   Credenciais do projeto "lulaouflavio"
    ========================================================================== */
 
 const FIREBASE_CONFIG = {
-  apiKey: "COLE_SUA_API_KEY",
-  authDomain: "SEU-PROJETO.firebaseapp.com",
-  databaseURL: "https://SEU-PROJETO-default-rtdb.firebaseio.com",
-  projectId: "SEU-PROJETO",
-  storageBucket: "SEU-PROJETO.appspot.com",
-  messagingSenderId: "SEU_SENDER_ID",
-  appId: "SEU_APP_ID"
+  apiKey: "AIzaSyD67fgfky3L9f0eebZndBW_gYVbHS96pvw",
+  authDomain: "lulaouflavio.firebaseapp.com",
+  databaseURL: "https://lulaouflavio-default-rtdb.firebaseio.com",
+  projectId: "lulaouflavio",
+  storageBucket: "lulaouflavio.firebasestorage.app",
+  messagingSenderId: "803908292052",
+  appId: "1:803908292052:web:80fe5aad8e64bdd9631a41"
 };
 
 /* Indica se o Firebase já foi configurado (credenciais reais preenchidas) */
-const FIREBASE_READY = FIREBASE_CONFIG.apiKey && !FIREBASE_CONFIG.apiKey.startsWith('COLE_');
+const FIREBASE_READY = !!FIREBASE_CONFIG.apiKey;
 
 /* ==========================================================================
-   Abstraction layer: usa Firebase quando configurado, senão cai para
+   Camada de abstração: usa Firebase quando configurado, senão cai para
    localStorage (mesmo comportamento do protótipo).
    ========================================================================== */
 
@@ -63,7 +38,7 @@ function firebaseInit(){
   }
 }
 
-/* --- Local fallback (mesmo que o protótipo usa) -------------------------- */
+/* --- Fallback local (mesmo que o protótipo usa) -------------------------- */
 const LS_RANK = 'lof.ranking.v1';
 
 function localLoad(){
@@ -84,7 +59,7 @@ function localSave(entry){
   } catch (e){ return false; }
 }
 
-/* --- Public API ---------------------------------------------------------- */
+/* --- API pública --------------------------------------------------------- */
 
 /**
  * Salva o resultado de uma partida no ranking global.
@@ -96,7 +71,10 @@ function saveRanking(entry){
   if (_db){
     return _db.ref('ranking').push(entry)
       .then(function(){ return true; })
-      .catch(function(err){ console.warn('[firebase.js] Erro ao salvar ranking:', err); return localSave(entry); });
+      .catch(function(err){
+        console.warn('[firebase.js] Erro ao salvar ranking:', err.message);
+        return localSave(entry);
+      });
   }
   return Promise.resolve(localSave(entry));
 }
@@ -120,7 +98,10 @@ function loadRanking(limit){
         out.reverse(); // do maior para o menor
         return out;
       })
-      .catch(function(err){ console.warn('[firebase.js] Erro ao carregar ranking:', err); return localLoad(); });
+      .catch(function(err){
+        console.warn('[firebase.js] Erro ao carregar ranking:', err.message);
+        return localLoad();
+      });
   }
   return Promise.resolve(localLoad());
 }
@@ -145,7 +126,6 @@ function getStats(){
 
 /**
  * Incrementa os contadores gerais a cada nova partida salva.
- * Chamada junto do saveRanking.
  */
 function incrementStats(){
   firebaseInit();
