@@ -23,7 +23,7 @@ const QUESTIONS = [
   { id: 3,  category: 'Segurança Pública', candidate: 'lula',   text: 'Priorizar a inteligência, a investigação e a prevenção em vez de ampliar o encarceramento?', source: 'Diretrizes de segurança pública' },
   { id: 4,  category: 'Segurança Pública', candidate: 'lula',   text: 'Integrar as polícias estaduais e federais no combate ao crime organizado?', source: 'Diretrizes de segurança pública' },
   { id: 5,  category: 'Segurança Pública', candidate: 'lula',   text: 'Criar programas de prevenção à violência e de inclusão social em territórios vulneráveis?', source: 'Diretrizes de segurança pública' },
-  { id: 6,  category: 'Segurança Pública', candidate: 'flavio', text: 'Reduzir a maioridade penal para crimes hediondos e graves?', source: 'Diretrizes de segurança pública' },
+  { id: 6,  category: 'Segurança Pública', candidate: 'flavio', text: 'Reduzir a maioridade penal de 18 para 16 anos?', source: 'Diretrizes de segurança pública' },
   { id: 7,  category: 'Segurança Pública', candidate: 'flavio', text: 'Construir mais presídios e restringir a progressão de pena para crimes violentos?', source: 'Diretrizes de segurança pública' },
   { id: 8,  category: 'Segurança Pública', candidate: 'flavio', text: 'Ampliar o porte de armas para a população civil?', source: 'Diretrizes de segurança pública' },
   { id: 9,  category: 'Segurança Pública', candidate: 'flavio', text: 'Criar tropas de elite nas fronteiras para combater o narcotráfico?', source: 'Diretrizes de segurança pública' },
@@ -61,7 +61,7 @@ const QUESTIONS = [
      4 · ECONOMIA & TRIBUTOS — 15 perguntas (7 Lula + 8 Flávio)
      ======================================================================== */
   { id: 31, category: 'Economia & Tributos', candidate: 'lula',   text: 'Aumentar a tributação sobre a renda dos super-ricos e grandes fortunas?', source: 'Diretrizes econômicas' },
-  { id: 32, category: 'Economia & Tributos', candidate: 'lula',   text: 'Taxar offshores e fundos exclusivos de investidores?', source: 'Diretrizes econômicas' },
+  { id: 32, category: 'Economia & Tributos', candidate: 'lula',   text: 'Taxar o dinheiro de brasileiros guardado em paraísos fiscais no exterior?', source: 'Diretrizes econômicas' },
   { id: 33, category: 'Economia & Tributos', candidate: 'lula',   text: 'Manter e fortalecer a CLT e os direitos trabalhistas?', source: 'Diretrizes econômicas' },
   { id: 34, category: 'Economia & Tributos', candidate: 'lula',   text: 'Manter o salário mínimo com reajuste acima da inflação?', source: 'Diretrizes econômicas' },
   { id: 35, category: 'Economia & Tributos', candidate: 'lula',   text: 'Fortalecer os sindicatos e a negociação coletiva dos trabalhadores?', source: 'Diretrizes econômicas' },
@@ -86,7 +86,7 @@ const QUESTIONS = [
   { id: 50, category: 'Meio Ambiente & Energia', candidate: 'lula',   text: 'Criar um fundo nacional para reparação de danos ambientais?', source: 'Diretrizes ambientais' },
   { id: 51, category: 'Meio Ambiente & Energia', candidate: 'flavio', text: 'Regulamentar a exploração mineral em novas áreas, incluindo terras indígenas?', source: 'Diretrizes ambientais' },
   { id: 52, category: 'Meio Ambiente & Energia', candidate: 'flavio', text: 'Reduzir a burocracia do licenciamento ambiental para obras de infraestrutura?', source: 'Diretrizes ambientais' },
-  { id: 53, category: 'Meio Ambiente & Energia', candidate: 'flavio', text: 'Explorar gás não convencional para ampliar a produção de energia?', source: 'Diretrizes ambientais' },
+  { id: 53, category: 'Meio Ambiente & Energia', candidate: 'flavio', text: 'Explorar gás de xisto para aumentar a produção de energia do país?', source: 'Diretrizes ambientais' },
   { id: 54, category: 'Meio Ambiente & Energia', candidate: 'flavio', text: 'Tratar o meio ambiente como ativo econômico para gerar riqueza?', source: 'Diretrizes ambientais' },
   { id: 55, category: 'Meio Ambiente & Energia', candidate: 'flavio', text: 'Reduzir encargos e taxas da energia para baratear a conta de luz?', source: 'Diretrizes ambientais' },
 
@@ -113,7 +113,7 @@ const QUESTIONS = [
   { id: 69, category: 'Soberania & Relações Internacionais', candidate: 'lula',   text: 'Defender o multilateralismo e o fortalecimento da ONU?', source: 'Diretrizes de política externa' },
   { id: 70, category: 'Soberania & Relações Internacionais', candidate: 'lula',   text: 'Manter relações comerciais e diplomáticas com a China e a Rússia?', source: 'Diretrizes de política externa' },
   { id: 71, category: 'Soberania & Relações Internacionais', candidate: 'flavio', text: 'Aproximar o Brasil dos Estados Unidos e de alianças ocidentais?', source: 'Diretrizes de política externa' },
-  { id: 72, category: 'Soberania & Relações Internacionais', candidate: 'flavio', text: 'Priorizar acordos comerciais que protejam a indústria nacional?', source: 'Diretrizes de política externa' },
+  { id: 72, category: 'Soberania & Relações Internacionais', candidate: 'lula', text: 'Priorizar acordos comerciais que protejam a indústria nacional?', source: 'Diretrizes de política externa' },
   { id: 73, category: 'Soberania & Relações Internacionais', candidate: 'flavio', text: 'Conduzir a política externa com foco comercial e não ideológico?', source: 'Diretrizes de política externa' },
   { id: 74, category: 'Soberania & Relações Internacionais', candidate: 'flavio', text: 'Fortalecer as Forças Armadas para garantir a soberania nas fronteiras?', source: 'Diretrizes de política externa' },
   { id: 75, category: 'Soberania & Relações Internacionais', candidate: 'flavio', text: 'Cobrar reciprocidade comercial de países que taxam produtos brasileiros?', source: 'Diretrizes de política externa' },
@@ -128,7 +128,7 @@ const QUESTIONS = [
   { id: 80, category: 'Infraestrutura & Tecnologia', candidate: 'lula',   text: 'Expandir o saneamento básico e o acesso à água potável?', source: 'Diretrizes de infraestrutura' },
   { id: 81, category: 'Infraestrutura & Tecnologia', candidate: 'flavio', text: 'Tratar a internet como infraestrutura essencial, como água e energia?', source: 'Diretrizes de infraestrutura' },
   { id: 82, category: 'Infraestrutura & Tecnologia', candidate: 'flavio', text: 'Digitalizar todos os serviços públicos federais?', source: 'Diretrizes de infraestrutura' },
-  { id: 83, category: 'Infraestrutura & Tecnologia', candidate: 'flavio', text: 'Criar um marco regulatório para o uso de inteligência artificial no setor público?', source: 'Diretrizes de infraestrutura' },
+  { id: 83, category: 'Infraestrutura & Tecnologia', candidate: 'flavio', text: 'Usar inteligência artificial para melhorar e agilizar os serviços públicos?', source: 'Diretrizes de infraestrutura' },
   { id: 84, category: 'Infraestrutura & Tecnologia', candidate: 'flavio', text: 'Reduzir a burocracia para abrir empresas e negócios?', source: 'Diretrizes de infraestrutura' },
   { id: 85, category: 'Infraestrutura & Tecnologia', candidate: 'flavio', text: 'Investir em ferrovias, hidrovias e logística para reduzir custos de transporte?', source: 'Diretrizes de infraestrutura' },
 
