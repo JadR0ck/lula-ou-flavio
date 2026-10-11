@@ -1059,9 +1059,9 @@ const QUESTIONS = [
   { id: 3,  category: 'Segurança Pública', candidate: 'lula',   text: 'Priorizar a inteligência, a investigação e a prevenção em vez de ampliar o encarceramento?', source: 'Diretrizes de segurança pública' },
   { id: 4,  category: 'Segurança Pública', candidate: 'lula',   text: 'Integrar as polícias estaduais e federais no combate ao crime organizado?', source: 'Diretrizes de segurança pública' },
   { id: 5,  category: 'Segurança Pública', candidate: 'lula',   text: 'Criar programas de prevenção à violência e de inclusão social em territórios vulneráveis?', source: 'Diretrizes de segurança pública' },
-  { id: 6,  category: 'Segurança Pública', candidate: 'flavio', text: 'Reduzir a maioridade penal de 18 para 16 anos?', source: 'Diretrizes de segurança pública' },
+  { id: 6,  category: 'Segurança Pública', candidate: 'flavio', text: 'Reduzir a maioridade penal de 18 para 16 anos?', source: 'Diretrizes de segurança pública', featured: true },
   { id: 7,  category: 'Segurança Pública', candidate: 'flavio', text: 'Construir mais presídios e restringir a progressão de pena para crimes violentos?', source: 'Diretrizes de segurança pública' },
-  { id: 8,  category: 'Segurança Pública', candidate: 'flavio', text: 'Ampliar o porte de armas para a população civil?', source: 'Diretrizes de segurança pública' , featured: true },
+  { id: 8,  category: 'Segurança Pública', candidate: 'flavio', text: 'Ampliar o porte de armas para todos os cidadãos?', source: 'Diretrizes de segurança pública', featured: true },
   { id: 9,  category: 'Segurança Pública', candidate: 'flavio', text: 'Criar tropas de elite nas fronteiras para combater o narcotráfico?', source: 'Diretrizes de segurança pública' },
   { id: 10, category: 'Segurança Pública', candidate: 'flavio', text: 'Responsabilizar adolescentes que cometem crimes graves como adultos?', source: 'Diretrizes de segurança pública' },
 
@@ -1192,8 +1192,9 @@ const QUESTIONS = [
   { id: 100, category: 'Instituições & Democracia', candidate: 'flavio', text: 'Reduzir o número de ministérios do governo federal?', source: 'Diretrizes institucionais' },
   { id: 101, category: 'Polêmicas da Eleição', candidate: 'lula', text: 'Proibir as apostas online, as chamadas "bets" (casas de apostas esportivas pela internet)?', source: 'Tema de campanha — fora dos planos de governo', featured: true },
   { id: 102, category: 'Polêmicas da Eleição', candidate: 'lula', text: 'Manter e ampliar o programa Farmácia Popular (distribuição gratuita de medicamentos para doenças como diabetes e pressão alta)?', source: 'Tema de campanha — fora dos planos de governo', featured: true },
-  { id: 103, category: 'Polêmicas da Eleição', candidate: 'lula', text: 'Acabar com a escala 6x1 (trabalhar 6 dias e folgar 1) e criar a escala 5x2 (trabalhar 5 dias e folgar 2, sem reduzir o salário)?', source: 'Tema de campanha — fora dos planos de governo', featured: true }
-
+  { id: 103, category: 'Polêmicas da Eleição', candidate: 'lula', text: 'Acabar com a escala 6x1 (trabalhar 6 dias e folgar 1) e criar a escala 5x2 (trabalhar 5 dias e folgar 2, sem reduzir o salário)?', source: 'Tema de campanha — fora dos planos de governo', featured: true },
+  { id: 104, category: 'Polêmicas da Eleição', candidate: 'flavio', text: 'Privatizar empresas estatais ineficientes, como a Petrobras e os Correios?', source: 'Tema de campanha — fora dos planos de governo', featured: true },
+  { id: 105, category: 'Polêmicas da Eleição', candidate: 'flavio', text: 'Garantir que o governo não monitore nem censure o que as pessoas fazem na internet (privacidade digital)?', source: 'Tema de campanha — fora dos planos de governo', featured: true }
 ];
 
 const TOTAL_CATEGORIES = 10;
@@ -1415,8 +1416,17 @@ function shuffle(a){
 }
 
 function beginGame(){
-  /* perguntas marcadas como "featured" (ex: temas polêmicos) vêm primeiro */
-  const featured = shuffle(QUESTIONS.filter(q => q.featured).map(q => q.id));
+  /* perguntas marcadas como "featured" (temas polêmicos) vêm primeiro,
+     intercaladas em blocos de 2 do Lula + 1 do Flávio para ficar equilibrado */
+  const featLula = shuffle(QUESTIONS.filter(q => q.featured && q.candidate === 'lula').map(q => q.id));
+  const featFlavio = shuffle(QUESTIONS.filter(q => q.featured && q.candidate === 'flavio').map(q => q.id));
+  const featured = [];
+  let li = 0, fi = 0;
+  while (li < featLula.length || fi < featFlavio.length){
+    if (li < featLula.length) featured.push(featLula[li++]);
+    if (li < featLula.length) featured.push(featLula[li++]);
+    if (fi < featFlavio.length) featured.push(featFlavio[fi++]);
+  }
   const rest = shuffle(QUESTIONS.filter(q => !q.featured).map(q => q.id));
   S.pool = featured.concat(rest);
   S.asked = [];
