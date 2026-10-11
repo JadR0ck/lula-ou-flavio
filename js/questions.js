@@ -39,7 +39,7 @@ const QUESTIONS = [
   { id: 15, category: 'Educação', candidate: 'lula',   text: 'Ampliar a educação em tempo integral nas escolas públicas?', source: 'Diretrizes de educação' },
   { id: 16, category: 'Educação', candidate: 'flavio', text: 'Criar escolas cívico-militares (escolas públicas com disciplina e gestão de militares) em todo o país?', source: 'Diretrizes de educação' },
   { id: 17, category: 'Educação', candidate: 'flavio', text: 'Adotar o método fônico na alfabetização das crianças (ensinar a ler pelo som de cada letra)?', source: 'Diretrizes de educação' },
-  { id: 18, category: 'Educação', candidate: 'flavio', text: 'Combater a chamada doutrinação ideológica nas escolas públicas?', source: 'Diretrizes de educação' },
+  { id: 18, category: 'Educação', candidate: 'flavio', text: 'Combater a doutrinação ideológica nas escolas públicas (evitar que professores imponham opiniões políticas em sala de aula)?', source: 'Diretrizes de educação' },
   { id: 19, category: 'Educação', candidate: 'flavio', text: 'Criar vouchers educacionais para famílias sem vaga na rede pública?', source: 'Diretrizes de educação' },
   { id: 20, category: 'Educação', candidate: 'flavio', text: 'Ampliar o ensino técnico profissionalizante voltado ao mercado de trabalho?', source: 'Diretrizes de educação' },
 
@@ -51,7 +51,7 @@ const QUESTIONS = [
   { id: 23, category: 'Saúde', candidate: 'lula',   text: 'Ampliar a produção nacional de vacinas e medicamentos?', source: 'Diretrizes de saúde' },
   { id: 24, category: 'Saúde', candidate: 'lula',   text: 'Garantir atendimento odontológico e de saúde mental pelo SUS?', source: 'Diretrizes de saúde' },
   { id: 25, category: 'Saúde', candidate: 'lula',   text: 'Ampliar a atenção básica e o atendimento de saúde nas comunidades?', source: 'Diretrizes de saúde' },
-  { id: 26, category: 'Saúde', candidate: 'flavio', text: 'Criar um prontuário eletrônico único nacional para todos os cidadãos?', source: 'Diretrizes de saúde' },
+  { id: 26, category: 'Saúde', candidate: 'flavio', text: 'Criar um prontuário eletrônico único nacional (histórico de saúde do paciente acessível em qualquer hospital do país)?', source: 'Diretrizes de saúde' },
   { id: 27, category: 'Saúde', candidate: 'flavio', text: 'Usar inteligência artificial no atendimento da saúde pública?', source: 'Diretrizes de saúde' },
   { id: 28, category: 'Saúde', candidate: 'flavio', text: 'Digitalizar e zerar as filas do INSS com tecnologia?', source: 'Diretrizes de saúde' },
   { id: 29, category: 'Saúde', candidate: 'flavio', text: 'Priorizar a saúde preventiva em vez do tratamento curativo?', source: 'Diretrizes de saúde' },
@@ -62,7 +62,7 @@ const QUESTIONS = [
      ======================================================================== */
   { id: 31, category: 'Economia & Tributos', candidate: 'lula',   text: 'Aumentar a tributação sobre a renda dos super-ricos e grandes fortunas?', source: 'Diretrizes econômicas' },
   { id: 32, category: 'Economia & Tributos', candidate: 'lula',   text: 'Taxar o dinheiro de brasileiros guardado em paraísos fiscais no exterior?', source: 'Diretrizes econômicas' },
-  { id: 33, category: 'Economia & Tributos', candidate: 'lula',   text: 'Manter e fortalecer a CLT e os direitos trabalhistas?', source: 'Diretrizes econômicas' },
+  { id: 33, category: 'Economia & Tributos', candidate: 'lula',   text: 'Manter e fortalecer a CLT (carteira de trabalho assinada) e os direitos trabalhistas?', source: 'Diretrizes econômicas' },
   { id: 34, category: 'Economia & Tributos', candidate: 'lula',   text: 'Manter o salário mínimo com reajuste acima da inflação?', source: 'Diretrizes econômicas' },
   { id: 35, category: 'Economia & Tributos', candidate: 'lula',   text: 'Fortalecer os sindicatos e a negociação coletiva dos trabalhadores?', source: 'Diretrizes econômicas' },
   { id: 36, category: 'Economia & Tributos', candidate: 'lula',   text: 'Manter o equilíbrio fiscal sem cortar os investimentos sociais?', source: 'Diretrizes econômicas' },
@@ -107,7 +107,7 @@ const QUESTIONS = [
   /* ========================================================================
      7 · SOBERANIA & RELAÇÕES INTERNACIONAIS — 10 perguntas (5 Lula + 5 Flávio)
      ======================================================================== */
-  { id: 66, category: 'Soberania & Relações Internacionais', candidate: 'lula',   text: 'Fortalecer o BRICS e a cooperação com países emergentes?', source: 'Diretrizes de política externa' },
+  { id: 66, category: 'Soberania & Relações Internacionais', candidate: 'lula',   text: 'Fortalecer o BRICS (grupo de países emergentes, como China e Rússia)?', source: 'Diretrizes de política externa' },
   { id: 67, category: 'Soberania & Relações Internacionais', candidate: 'lula',   text: 'Manter uma política externa independente, sem alinhamento automático aos EUA?', source: 'Diretrizes de política externa' },
   { id: 68, category: 'Soberania & Relações Internacionais', candidate: 'lula',   text: 'Investir em cooperação técnica com países da África e da América Latina?', source: 'Diretrizes de política externa' },
   { id: 69, category: 'Soberania & Relações Internacionais', candidate: 'lula',   text: 'Defender o multilateralismo e o fortalecimento da ONU?', source: 'Diretrizes de política externa' },
@@ -121,8 +121,8 @@ const QUESTIONS = [
   /* ========================================================================
      8 · INFRAESTRUTURA & TECNOLOGIA — 10 perguntas (5 Lula + 5 Flávio)
      ======================================================================== */
-  { id: 76, category: 'Infraestrutura & Tecnologia', candidate: 'lula',   text: 'Ampliar os investimentos públicos em infraestrutura, como o Novo PAC?', source: 'Diretrizes de infraestrutura' },
-  { id: 77, category: 'Infraestrutura & Tecnologia', candidate: 'lula',   text: 'Investir em tecnologia nacional e na produção de semicondutores?', source: 'Diretrizes de infraestrutura' },
+  { id: 76, category: 'Infraestrutura & Tecnologia', candidate: 'lula',   text: 'Ampliar os investimentos públicos em obras de infraestrutura, como o Novo PAC (programa de obras do governo)?', source: 'Diretrizes de infraestrutura' },
+  { id: 77, category: 'Infraestrutura & Tecnologia', candidate: 'lula',   text: 'Investir em tecnologia nacional e na produção de semicondutores (chips de celular e computador)?', source: 'Diretrizes de infraestrutura' },
   { id: 78, category: 'Infraestrutura & Tecnologia', candidate: 'lula',   text: 'Ampliar a conectividade e a inclusão digital nas escolas públicas?', source: 'Diretrizes de infraestrutura' },
   { id: 79, category: 'Infraestrutura & Tecnologia', candidate: 'lula',   text: 'Investir em pesquisa científica e inovação nas universidades e institutos?', source: 'Diretrizes de infraestrutura' },
   { id: 80, category: 'Infraestrutura & Tecnologia', candidate: 'lula',   text: 'Expandir o saneamento básico e o acesso à água potável?', source: 'Diretrizes de infraestrutura' },
