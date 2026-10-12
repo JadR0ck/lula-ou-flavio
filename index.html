@@ -935,12 +935,6 @@ button{ font-family:inherit; cursor:pointer; border:0; background:none; color:in
         <div class="sheet">
           <h2>🏆 Ranking global</h2>
 
-          <div class="tabs" role="tablist">
-            <button class="tab on" data-tab="all" role="tab">Todos</button>
-            <button class="tab" data-tab="lula" role="tab">Lula</button>
-            <button class="tab" data-tab="flavio" role="tab">Flávio</button>
-          </div>
-
           <div class="dialog dark" style="padding:.8em">
             <p class="label" style="text-align:center;margin:0 0 .6em;color:var(--gold)">Quem está à frente?</p>
             <div class="scores" id="gr-lead"></div>
@@ -1780,8 +1774,7 @@ function esc(s){ return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&l
 
 function renderRanking(){
   loadRanking(1000).then(function(all){
-    const list = S.rankTab === 'all' ? all : all.filter(r => r.winner === S.rankTab);
-    $('#gr-list').innerHTML = rankRows(list.slice(0, 40));
+    $('#gr-list').innerHTML = rankRows(all.slice(0, 40));
     $('#gr-players').textContent = all.length;
     $('#gr-games').textContent = all.length;
     renderLead(all);
@@ -1808,14 +1801,6 @@ function renderLead(all){
     '<p class="sub" style="margin:.5em 0 0">'+ l +' jogadores mais Lula · '+ f +' mais Flávio</p>';
   setTimeout(function(){ el.querySelectorAll('i').forEach(function(i, idx){ i.style.width = (idx === 0 ? pctL : pctF) + '%'; }); }, 60);
 }
-$$('.tab').forEach(function(t){
-  t.addEventListener('click', function(){
-    $$('.tab').forEach(x => x.classList.remove('on'));
-    t.classList.add('on');
-    S.rankTab = t.getAttribute('data-tab');
-    renderRanking();
-  });
-});
 $('#btn-back').addEventListener('click', function(){
   show(S.answers.length && S.lastResult ? 'result' : 'title');
 });
