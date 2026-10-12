@@ -1069,6 +1069,7 @@ button{ font-family:inherit; cursor:pointer; border:0; background:none; color:in
 <!-- Firebase SDK (ranking global) -->
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-analytics-compat.js"></script>
 <script src="js/firebase.js"></script>
 
 <script>
@@ -1469,6 +1470,7 @@ function beginGame(){
   S.lastResult = null;
   S.sawFirstQuestion = false;
   S.ckShown = false;
+  logEvent('game_started');
   nextQuestion();
   show('quiz');
 }
@@ -1636,6 +1638,7 @@ function finish(){
   const pctF = 100 - pctL;
   const tie = sc.l === sc.f;
   const winner = tie ? 'tie' : (sc.l > sc.f ? 'lula' : 'flavio');
+  logEvent('quiz_completed', { winner: winner, total: sc.total });
 
   S.lastResult = { lula:sc.l, flavio:sc.f, total:sc.total, pctLula:pctL, pctFlavio:pctF, winner:winner, saved:false };
 
@@ -1747,8 +1750,8 @@ function shareText(){
   const l = r.winner === 'lula' ? 'Flavio' : 'Lula';
   return 'Eu fiz o teste de *Lula ou Flavio* e deu *' + wp + '% ' + w + '* (e ' + lp + '% ' + l + ').\nE você, com quem combina mais? Jogue aqui: ' + GAME_URL;
 }
-function shareWhatsApp(){ window.open('https://wa.me/?text=' + encodeURIComponent(shareText()), '_blank', 'noopener'); }
-function shareTwitter(){  window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent(shareText().replace(/\*/g, '')), '_blank', 'noopener'); }
+function shareWhatsApp(){ logEvent('share', { platform: 'whatsapp' }); window.open('https://wa.me/?text=' + encodeURIComponent(shareText()), '_blank', 'noopener'); }
+function shareTwitter(){  logEvent('share', { platform: 'twitter' }); window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent(shareText().replace(/\*/g, '')), '_blank', 'noopener'); }
 
 /* ---------- 14 · RANKING (Firebase via js/firebase.js) --------------------
    As funções globais loadRanking(limit), saveRanking(entry), getStats() e

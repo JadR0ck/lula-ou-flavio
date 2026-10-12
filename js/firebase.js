@@ -10,7 +10,8 @@ const FIREBASE_CONFIG = {
   projectId: "lulaouflavio",
   storageBucket: "lulaouflavio.firebasestorage.app",
   messagingSenderId: "803908292052",
-  appId: "1:803908292052:web:80fe5aad8e64bdd9631a41"
+  appId: "1:803908292052:web:80fe5aad8e64bdd9631a41",
+  measurementId: "G-08S7WD9ME5"
 };
 
 /* Indica se o Firebase já foi configurado (credenciais reais preenchidas) */
@@ -22,6 +23,7 @@ const FIREBASE_READY = !!FIREBASE_CONFIG.apiKey;
    ========================================================================== */
 
 let _db = null;
+let _analytics = null;
 
 function firebaseInit(){
   if (!FIREBASE_READY) return null;
@@ -31,6 +33,14 @@ function firebaseInit(){
       firebase.initializeApp(FIREBASE_CONFIG);
     }
     _db = firebase.database();
+    /* Analytics (Google Analytics 4) */
+    try {
+      if (typeof firebase.analytics === 'function'){
+        _analytics = firebase.analytics();
+      }
+    } catch (e){
+      console.warn('[firebase.js] Analytics indisponível:', e.message);
+    }
     return _db;
   } catch (e){
     console.warn('[firebase.js] Falha ao inicializar Firebase:', e.message);
@@ -136,9 +146,23 @@ function incrementStats(){
   }
 }
 
+/**
+ * Registra um evento no Analytics (Google Analytics 4).
+ * @param {string} name nome do evento (ex: 'game_started')
+ * @param {Object} params parâmetros do evento
+ */
+function logEvent(name, params){
+  try {
+    if (_analytics){
+      _analytics.logEvent(name, params || {});
+    }
+  } catch (e){ /* analytics não é crítico — falha em silêncio */ }
+}
+
 /* Expor no escopo global para uso no script principal do jogo */
 window.saveRanking = saveRanking;
 window.loadRanking = loadRanking;
 window.getStats = getStats;
 window.incrementStats = incrementStats;
+window.logEvent = logEvent;
 window.FIREBASE_READY = FIREBASE_READY;
