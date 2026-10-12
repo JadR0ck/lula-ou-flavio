@@ -1068,7 +1068,6 @@ button{ font-family:inherit; cursor:pointer; border:0; background:none; color:in
 
 <!-- Firebase SDK (ranking global) -->
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-check-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
 <script src="js/firebase.js"></script>
 
@@ -1590,7 +1589,8 @@ let ckOpenAt = 0;
 function openCheckpoint(){
   S.ckShown = true;   // evita reabrir o checkpoint ao clicar "continuar"
   const sc = score();
-  const pctL = Math.round(sc.l / sc.total * 100);
+  const pts = sc.l + sc.f;
+  const pctL = pts ? Math.round(sc.l / pts * 100) : 0;
   const pctF = 100 - pctL;
   const bars = $('#ck-scores');
   bars.innerHTML =
@@ -1631,7 +1631,8 @@ $('#btn-finish').addEventListener('click', function(){
 /* ---------- 11 · RESULTADO ---------------------------------------------- */
 function finish(){
   const sc = score();
-  const pctL = sc.total ? Math.round(sc.l / sc.total * 100) : 0;
+  const pts = sc.l + sc.f;
+  const pctL = pts ? Math.round(sc.l / pts * 100) : 0;
   const pctF = 100 - pctL;
   const tie = sc.l === sc.f;
   const winner = tie ? 'tie' : (sc.l > sc.f ? 'lula' : 'flavio');
@@ -1738,13 +1739,13 @@ function confetti(winner){
 /* ---------- 13 · COMPARTILHAMENTO --------------------------------------- */
 function shareText(){
   const r = S.lastResult;
-  if (!r) return '🎮 Descubra se você combina mais com Lula ou Flávio! 🇧🇷\n👉 Jogue agora: ' + GAME_URL;
-  if (r.winner === 'tie') return '🎮 Eu fiz o teste de *Lula ou Flavio*! 🤯\nDeu *' + r.pctLula + '% Lula* e ' + r.pctFlavio + '% Flávio — empate!\nE você, com quem combina mais? 👀\n👉 Jogue aqui: ' + GAME_URL;
+  if (!r) return 'Descubra se você combina mais com Lula ou Flávio!\nJogue agora: ' + GAME_URL;
+  if (r.winner === 'tie') return 'Eu fiz o teste de *Lula ou Flavio* e deu *' + r.pctLula + '% Lula* e ' + r.pctFlavio + '% Flávio — empate!\nE você, com quem combina mais? Jogue aqui: ' + GAME_URL;
   const w = r.winner === 'lula' ? 'Lula' : 'Flavio';
   const wp = r.winner === 'lula' ? r.pctLula : r.pctFlavio;
   const lp = r.winner === 'lula' ? r.pctFlavio : r.pctLula;
   const l = r.winner === 'lula' ? 'Flavio' : 'Lula';
-  return '🎮 Eu fiz o teste de *Lula ou Flavio*! 😱\nDeu *' + wp + '% ' + w + '* (e ' + lp + '% ' + l + ').\nE você, com quem combina mais? 👀\n👉 Jogue aqui: ' + GAME_URL;
+  return 'Eu fiz o teste de *Lula ou Flavio* e deu *' + wp + '% ' + w + '* (e ' + lp + '% ' + l + ').\nE você, com quem combina mais? Jogue aqui: ' + GAME_URL;
 }
 function shareWhatsApp(){ window.open('https://wa.me/?text=' + encodeURIComponent(shareText()), '_blank', 'noopener'); }
 function shareTwitter(){  window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent(shareText().replace(/\*/g, '')), '_blank', 'noopener'); }
