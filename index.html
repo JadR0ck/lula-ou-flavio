@@ -538,20 +538,21 @@ button{ font-family:inherit; cursor:pointer; border:0; background:none; color:in
 .score-row{ display:flex; align-items:center; gap:.6em; }
 .score-row .who{
   font-family: var(--f-pixel); font-size: var(--ui-sm); letter-spacing:.06em;
-  width:4.4em; flex:0 0 auto;
+  width:6em; flex:0 0 auto; white-space:nowrap;
 }
 .score-row.l .who{ color: var(--lula); }
 .score-row.f .who{ color: var(--flavio); }
 .score-row .track{
   flex:1; height: clamp(20px,5.4vw,26px);
   background: var(--bg-deep); border:var(--step) solid var(--line); padding:2px;
+  overflow:hidden;
 }
 .score-row .track i{ display:block; height:100%; width:0; transition: width .9s steps(8,end); }
 .score-row.l .track i{ background: repeating-linear-gradient(90deg, var(--lula) 0 6px, var(--lula-dark) 6px 8px); }
 .score-row.f .track i{ background: repeating-linear-gradient(90deg, var(--flavio) 0 6px, var(--flavio-dark) 6px 8px); }
 .score-row .pct{
   font-family: var(--f-pixel); font-size: var(--ui-sm);
-  width:3.4em; text-align:right; flex:0 0 auto;
+  width:4em; text-align:right; flex:0 0 auto; white-space:nowrap;
 }
 
 /* lista de ranking */
