@@ -16,6 +16,9 @@ const FIREBASE_CONFIG = {
 /* Indica se o Firebase já foi configurado (credenciais reais preenchidas) */
 const FIREBASE_READY = !!FIREBASE_CONFIG.apiKey;
 
+/* Chave do reCAPTCHA Enterprise (App Check) — protege o ranking contra bots */
+const APP_CHECK_SITE_KEY = "6LeIzOstAAAAADlSS1whmUNTkpoCCj8WyFmZReA5";
+
 /* ==========================================================================
    Camada de abstração: usa Firebase quando configurado, senão cai para
    localStorage (mesmo comportamento do protótipo).
@@ -29,6 +32,18 @@ function firebaseInit(){
     if (typeof firebase === 'undefined') return null;
     if (!firebase.apps || !firebase.apps.length){
       firebase.initializeApp(FIREBASE_CONFIG);
+    }
+    /* App Check (reCAPTCHA Enterprise): bloqueia escrita por bots/scripts */
+    try {
+      if (typeof firebase.appCheck === 'function' && APP_CHECK_SITE_KEY){
+        const appCheck = firebase.appCheck();
+        appCheck.activate(
+          new firebase.appCheck.ReCaptchaEnterpriseProvider(APP_CHECK_SITE_KEY),
+          true
+        );
+      }
+    } catch (e){
+      console.warn('[firebase.js] App Check indisponível:', e.message);
     }
     _db = firebase.database();
     return _db;
