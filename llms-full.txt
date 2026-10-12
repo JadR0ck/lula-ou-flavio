@@ -1,0 +1,153 @@
+# Lula ou Flavio — Jogo Político Brasil (Conteúdo Completo)
+
+> Lista completa de todas as perguntas do jogo, organizadas por categoria.
+> Para cada pergunta, é indicado o candidato que defende a posição descrita.
+
+## Como a pontuação funciona
+
+- Se o jogador responde SIM, pontua para o candidato que defende a posição.
+- Se responde NÃO, pontua para o adversário.
+
+## Segurança Pública
+
+- **LULA**: Manter o controle e a restrição do porte de armas de fogo no país?
+- **LULA**: Criar uma política nacional de redução da letalidade policial e de enfrentamento ao racismo institucional?
+- **LULA**: Priorizar a inteligência, a investigação e a prevenção em vez de ampliar o encarceramento?
+- **LULA**: Integrar as polícias estaduais e federais no combate ao crime organizado?
+- **LULA**: Criar programas de prevenção à violência e de inclusão social em territórios vulneráveis?
+- **FLÁVIO**: Reduzir a maioridade penal de 18 para 16 anos?
+- **FLÁVIO**: Construir mais presídios e restringir a progressão de pena para crimes violentos?
+- **FLÁVIO**: Ampliar o porte de armas para todos os cidadãos?
+- **FLÁVIO**: Criar tropas de elite nas fronteiras para combater o narcotráfico?
+- **FLÁVIO**: Responsabilizar adolescentes que cometem crimes graves como adultos?
+
+## Educação
+
+- **LULA**: Ampliar a oferta de creches e pré-escolas públicas gratuitas?
+- **LULA**: Aumentar o investimento em universidades públicas e em bolsas de pesquisa?
+- **LULA**: Manter e ampliar os programas de alfabetização na idade certa?
+- **LULA**: Garantir recursos para a formação continuada dos professores da rede pública?
+- **LULA**: Ampliar a educação em tempo integral nas escolas públicas?
+- **FLÁVIO**: Criar escolas cívico-militares (escolas públicas com disciplina e gestão de militares) em todo o país?
+- **FLÁVIO**: Adotar o método fônico na alfabetização das crianças (ensinar a ler pelo som de cada letra)?
+- **FLÁVIO**: Combater a doutrinação ideológica nas escolas públicas (evitar que professores imponham opiniões políticas em sala de aula)?
+- **FLÁVIO**: Criar vouchers educacionais para famílias sem vaga na rede pública?
+- **FLÁVIO**: Ampliar o ensino técnico profissionalizante voltado ao mercado de trabalho?
+
+## Saúde
+
+- **LULA**: Fortalecer o SUS (Sistema Único de Saúde, o atendimento público de saúde do Brasil)?
+- **LULA**: Aumentar o financiamento federal da saúde pública?
+- **LULA**: Ampliar a produção nacional de vacinas e medicamentos?
+- **LULA**: Garantir atendimento odontológico e de saúde mental pelo SUS (Sistema Único de Saúde)?
+- **LULA**: Ampliar a atenção básica e o atendimento de saúde nas comunidades?
+- **FLÁVIO**: Criar um prontuário eletrônico único nacional (histórico de saúde do paciente acessível em qualquer hospital do país)?
+- **FLÁVIO**: Usar inteligência artificial no atendimento da saúde pública?
+- **FLÁVIO**: Digitalizar e zerar as filas do INSS (órgão que paga aposentadorias e benefícios) com tecnologia?
+- **FLÁVIO**: Priorizar a saúde preventiva em vez do tratamento curativo?
+- **FLÁVIO**: Criar programas de atendimento domiciliar para idosos dependentes?
+
+## Economia & Tributos
+
+- **LULA**: Aumentar a tributação sobre a renda dos super-ricos e grandes fortunas?
+- **LULA**: Taxar o dinheiro de brasileiros guardado em paraísos fiscais no exterior?
+- **LULA**: Manter e fortalecer a CLT (carteira de trabalho assinada) e os direitos trabalhistas?
+- **LULA**: Manter o salário mínimo com reajuste acima da inflação?
+- **LULA**: Fortalecer os sindicatos e a negociação coletiva dos trabalhadores?
+- **LULA**: Manter as contas do governo em dia (gastar só o que arrecada) sem cortar os investimentos em saúde, educação e programas sociais?
+- **LULA**: Manter e ampliar programas de transferência de renda como o Bolsa Família?
+- **FLÁVIO**: Reduzir os impostos sobre o consumo para baixar os preços?
+- **FLÁVIO**: Simplificar a conta de luz, eliminando taxas e encargos ocultos?
+- **FLÁVIO**: Reduzir o custo do trabalho para as empresas contratarem mais?
+- **FLÁVIO**: Priorizar o trabalhador individual em relação aos sindicatos?
+- **FLÁVIO**: Reduzir o tamanho da máquina pública com uma reforma administrativa?
+- **FLÁVIO**: Zerar o déficit público para reduzir juros e inflação?
+- **FLÁVIO**: Facilitar o crédito para pequenos empreendedores com juros menores?
+- **FLÁVIO**: Combater fraudes no INSS (órgão que paga aposentadorias) e nos auxílios sociais com auditoria rigorosa?
+
+## Meio Ambiente & Energia
+
+- **LULA**: Combater o desmatamento ilegal na Amazônia com fiscalização reforçada?
+- **LULA**: Expandir as energias solar e eólica no país?
+- **LULA**: Fortalecer a agricultura familiar e a agroecologia?
+- **LULA**: Proteger terras indígenas e quilombolas contra invasões e garimpo ilegal?
+- **LULA**: Criar um fundo nacional para reparação de danos ambientais?
+- **FLÁVIO**: Regulamentar a exploração mineral em novas áreas, incluindo terras indígenas?
+- **FLÁVIO**: Reduzir a burocracia do licenciamento ambiental para obras de infraestrutura?
+- **FLÁVIO**: Explorar gás de xisto para aumentar a produção de energia do país?
+- **FLÁVIO**: Tratar o meio ambiente como ativo econômico para gerar riqueza?
+- **FLÁVIO**: Reduzir encargos e taxas da energia para baratear a conta de luz?
+
+## Direitos Sociais
+
+- **LULA**: Ampliar as cotas raciais e sociais nas universidades públicas?
+- **LULA**: Criar políticas públicas específicas para a população LGBTQIA+ (lésbicas, gays, bissexuais, trans e outras minorias)?
+- **LULA**: Fortalecer a igualdade salarial entre homens e mulheres?
+- **LULA**: Ampliar o acesso à moradia popular e à regularização fundiária?
+- **LULA**: Criar um plano nacional de enfrentamento à fome e à pobreza extrema?
+- **FLÁVIO**: Criar uma central de atendimento com aplicativo de denúncia para proteger mulheres?
+- **FLÁVIO**: Adotar tolerância zero para o feminicídio, com penas mais rigorosas?
+- **FLÁVIO**: Oferecer bônus de internet para mulheres vítimas de violência doméstica?
+- **FLÁVIO**: Priorizar a capacitação profissional para mulheres chefes de família?
+- **FLÁVIO**: Criar um programa de casa segura para mulheres em situação de risco?
+
+## Soberania & Relações Internacionais
+
+- **LULA**: Fortalecer o BRICS (grupo de países emergentes, como China e Rússia)?
+- **LULA**: Manter uma política externa independente, sem alinhamento automático aos EUA?
+- **LULA**: Investir em cooperação técnica com países da África e da América Latina?
+- **LULA**: Defender o multilateralismo e o fortalecimento da ONU (Organização das Nações Unidas)?
+- **LULA**: Manter relações comerciais e diplomáticas com a China e a Rússia?
+- **FLÁVIO**: Aproximar o Brasil dos Estados Unidos e de alianças ocidentais?
+- **LULA**: Priorizar acordos comerciais que protejam a indústria nacional?
+- **FLÁVIO**: Conduzir a política externa com foco comercial e não ideológico?
+- **FLÁVIO**: Fortalecer as Forças Armadas para garantir a soberania nas fronteiras?
+- **FLÁVIO**: Cobrar reciprocidade comercial de países que taxam produtos brasileiros?
+
+## Infraestrutura & Tecnologia
+
+- **LULA**: Ampliar os investimentos públicos em obras de infraestrutura, como o Novo PAC (programa de obras do governo)?
+- **LULA**: Investir em tecnologia nacional e na produção de semicondutores (chips de celular e computador)?
+- **LULA**: Ampliar a conectividade e a inclusão digital nas escolas públicas?
+- **LULA**: Investir em pesquisa científica e inovação nas universidades e institutos?
+- **LULA**: Expandir o saneamento básico e o acesso à água potável?
+- **FLÁVIO**: Tratar a internet como infraestrutura essencial, como água e energia?
+- **FLÁVIO**: Digitalizar todos os serviços públicos federais?
+- **FLÁVIO**: Usar inteligência artificial para melhorar e agilizar os serviços públicos?
+- **FLÁVIO**: Reduzir a burocracia para abrir empresas e negócios?
+- **FLÁVIO**: Investir em ferrovias, hidrovias e logística para reduzir custos de transporte?
+
+## Cultura, Esporte & Lazer
+
+- **LULA**: Manter e ampliar as leis de incentivo à cultura?
+- **LULA**: Investir no esporte de base e no lazer nas comunidades e escolas?
+- **LULA**: Fortalecer o turismo cultural e comunitário?
+- **LULA**: Garantir financiamento público para a cultura e os artistas?
+- **FLÁVIO**: Ampliar a prática esportiva nas escolas, formando atletas desde cedo?
+- **FLÁVIO**: Criar bolsas esportivas para atletas de alto rendimento?
+- **FLÁVIO**: Valorizar e preservar os patrimônios históricos e culturais regionais?
+
+## Instituições & Democracia
+
+- **LULA**: Fortalecer a participação social com conselhos e orçamento participativo?
+- **LULA**: Defender a democracia e as instituições contra tentativas de ruptura?
+- **LULA**: Fortalecer os órgãos de controle e transparência do governo?
+- **LULA**: Ampliar a transparência e o acesso à informação pública?
+- **FLÁVIO**: Acabar com a reeleição para presidente, governador e prefeito?
+- **FLÁVIO**: Limitar as decisões individuais de ministros do Supremo Tribunal Federal?
+- **FLÁVIO**: Garantir ampla liberdade de expressão, sem censura nas redes sociais?
+- **FLÁVIO**: Reduzir o número de ministérios do governo federal?
+
+## Polêmicas da Eleição
+
+- **LULA**: Proibir as apostas online, as chamadas "bets" (casas de apostas esportivas pela internet)?
+- **LULA**: Manter e ampliar o programa Farmácia Popular (distribuição gratuita de medicamentos para doenças como diabetes e pressão alta)?
+- **LULA**: Acabar com a escala 6x1 (trabalhar 6 dias e folgar 1) e criar a escala 5x2 (trabalhar 5 dias e folgar 2, sem reduzir o salário)?
+- **FLÁVIO**: Privatizar empresas estatais ineficientes, como a Petrobras e os Correios?
+- **FLÁVIO**: Garantir que o governo não monitore nem censure o que as pessoas fazem na internet (privacidade digital)?
+
+## Estatísticas
+
+- Total de perguntas: 105
+- Perguntas onde o SIM favorece Lula: 54
+- Perguntas onde o SIM favorece Flávio: 51

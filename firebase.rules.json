@@ -1,0 +1,49 @@
+{
+  "rules": {
+    "ranking": {
+      ".read": true,
+      "$entry": {
+        ".write": "!data.exists()",
+        ".validate": "newData.hasChildren(['name', 'lula', 'flavio', 'total', 'pct', 'winner', 'ts'])",
+        "name": {
+          ".validate": "newData.isString() && newData.val().length >= 3 && newData.val().length <= 20"
+        },
+        "lula": {
+          ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 105"
+        },
+        "flavio": {
+          ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 105"
+        },
+        "total": {
+          ".validate": "newData.isNumber() && newData.val() >= 10 && newData.val() <= 105"
+        },
+        "pct": {
+          ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 100"
+        },
+        "winner": {
+          ".validate": "newData.isString() && (newData.val() === 'lula' || newData.val() === 'flavio' || newData.val() === 'tie')"
+        },
+        "ts": {
+          ".validate": "newData.isString()"
+        },
+        "$other": {
+          ".validate": "false"
+        }
+      }
+    },
+    "stats": {
+      ".read": true,
+      "total_players": {
+        ".write": true,
+        ".validate": "newData.isNumber()"
+      },
+      "total_games": {
+        ".write": true,
+        ".validate": "newData.isNumber()"
+      },
+      "$other": {
+        ".validate": "false"
+      }
+    }
+  }
+}
