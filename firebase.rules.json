@@ -26,6 +26,9 @@
         "ts": {
           ".validate": "newData.isString()"
         },
+        "userAgent": {
+          ".validate": "newData.isString() && newData.val().length <= 500"
+        },
         "$other": {
           ".validate": "false"
         }

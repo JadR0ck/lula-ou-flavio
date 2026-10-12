@@ -1681,7 +1681,8 @@ function finish(){
       lula: sc.l, flavio: sc.f, total: sc.total,
       pct: Math.max(pctL, pctF),
       winner: winner,
-      ts: new Date().toISOString()
+      ts: new Date().toISOString(),
+      userAgent: navigator.userAgent || ''
     }).then(function(){
       S.lastResult.saved = true;
       toast('Resultado salvo no ranking global!', 1800);
