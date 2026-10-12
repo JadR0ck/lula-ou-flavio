@@ -1744,13 +1744,13 @@ function confetti(winner){
 /* ---------- 13 · COMPARTILHAMENTO --------------------------------------- */
 function shareText(){
   const r = S.lastResult;
-  if (!r) return 'Joguei *Lula ou Flavio*! Descubra o seu resultado: ' + GAME_URL;
-  if (r.winner === 'tie') return '🎮 Joguei *Lula ou Flavio*!\n📊 Resultado: ' + r.pctLula + '% Lula, ' + r.pctFlavio + '% Flavio — afinidade equilibrada!\n🗳️ Descubra qual candidato pensa mais como você:\n' + GAME_URL;
+  if (!r) return '🎮 Descubra se você combina mais com Lula ou Flávio! 🇧🇷\n👉 Jogue agora: ' + GAME_URL;
+  if (r.winner === 'tie') return '🎮 Eu fiz o teste de *Lula ou Flavio*! 🤯\nDeu *' + r.pctLula + '% Lula* e ' + r.pctFlavio + '% Flávio — empate!\nE você, com quem combina mais? 👀\n👉 Jogue aqui: ' + GAME_URL;
   const w = r.winner === 'lula' ? 'Lula' : 'Flavio';
   const wp = r.winner === 'lula' ? r.pctLula : r.pctFlavio;
   const lp = r.winner === 'lula' ? r.pctFlavio : r.pctLula;
   const l = r.winner === 'lula' ? 'Flavio' : 'Lula';
-  return '🎮 Joguei *Lula ou Flavio*!\n📊 Meu resultado: ' + wp + '% ' + w + ', ' + lp + '% ' + l + '\n🗳️ Descubra qual candidato pensa mais como você:\n' + GAME_URL;
+  return '🎮 Eu fiz o teste de *Lula ou Flavio*! 😱\nDeu *' + wp + '% ' + w + '* (e ' + lp + '% ' + l + ').\nE você, com quem combina mais? 👀\n👉 Jogue aqui: ' + GAME_URL;
 }
 function shareWhatsApp(){ window.open('https://wa.me/?text=' + encodeURIComponent(shareText()), '_blank', 'noopener'); }
 function shareTwitter(){  window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent(shareText().replace(/\*/g, '')), '_blank', 'noopener'); }
