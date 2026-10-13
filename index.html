@@ -649,6 +649,7 @@ button{ font-family:inherit; cursor:pointer; border:0; background:none; color:in
 .share-row .btn{ flex:1; }
 .btn--wa{ background:#25D366; }
 .btn--tw{ background:#1DA1F2; }
+.btn--copy{ background:#4b5563; }
 
 .actions{ display:flex; flex-direction:column; gap:.55em; }
 
@@ -918,6 +919,7 @@ button{ font-family:inherit; cursor:pointer; border:0; background:none; color:in
           <div class="share-row">
             <button class="btn btn--wa" id="btn-wa">📱 WhatsApp</button>
             <button class="btn btn--tw" id="btn-tw">🐦 Twitter/X</button>
+            <button class="btn btn--copy" id="btn-copy">📋 Copiar</button>
           </div>
 
           <div class="actions">
@@ -1721,6 +1723,7 @@ $('#btn-again').addEventListener('click', function(){ beginGame(); });
 $('#btn-share-ck').addEventListener('click', shareWhatsApp);
 $('#btn-wa').addEventListener('click', shareWhatsApp);
 $('#btn-tw').addEventListener('click', shareTwitter);
+$('#btn-copy').addEventListener('click', copyResult);
 
 /* ---------- 12 · CONFETE ------------------------------------------------ */
 function confetti(winner){
@@ -1752,6 +1755,27 @@ function shareText(){
 }
 function shareWhatsApp(){ logEvent('share', { platform: 'whatsapp' }); window.open('https://wa.me/?text=' + encodeURIComponent(shareText()), '_blank', 'noopener'); }
 function shareTwitter(){  logEvent('share', { platform: 'twitter' }); window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent(shareText().replace(/\*/g, '')), '_blank', 'noopener'); }
+function copyResult(){
+  logEvent('share', { platform: 'copy' });
+  const text = shareText().replace(/\*/g, '');
+  if (navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(function(){
+      toast('Resultado copiado! Cole onde quiser.', 2000);
+    }).catch(function(){ fallbackCopy(text); });
+  } else {
+    fallbackCopy(text);
+  }
+}
+function fallbackCopy(text){
+  const ta = document.createElement('textarea');
+  ta.value = text;
+  ta.style.position = 'fixed'; ta.style.opacity = '0';
+  document.body.appendChild(ta);
+  ta.focus(); ta.select();
+  try { document.execCommand('copy'); toast('Resultado copiado!', 2000); }
+  catch(e){ toast('Não foi possível copiar.', 2000); }
+  document.body.removeChild(ta);
+}
 
 /* ---------- 14 · RANKING (Firebase via js/firebase.js) --------------------
    As funções globais loadRanking(limit), saveRanking(entry), getStats() e
